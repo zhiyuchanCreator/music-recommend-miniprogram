@@ -1,0 +1,39 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #FFFFFF;
+  display: flex;
+  border-top: 1rpx solid #E5E6EB;
+  padding-bottom: env(safe-area-inset-bottom);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Tab栏显示 */
+.tab-bar.show {
+  transform: translateY(0);
+}
+
+/* Tab栏隐藏 */
+.tab-bar.hide {
+  transform: translateY(100%);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-text {
+  font-size: 28rpx;
+  color: #86909C;
+}
+
+.tab-item.active .tab-text {
+  color: #3B5A6F;
+  font-weight: 600;
+}

@@ -1,0 +1,106 @@
+<!-- 骨架屏 -->
+<skeleton type="home" loading="{{isLoading}}"></skeleton>
+
+<view class="container page-enter">
+  <!-- 侧边栏 -->
+  <sidebar show="{{showSidebar}}" bind:close="onSidebarClose"></sidebar>
+
+  <!-- 顶部搜索栏 - 始终显示 -->
+  <view class="search-bar">
+    <view class="menu-icon" bindtap="onMenuTap">
+      <view class="menu-line"></view>
+      <view class="menu-line"></view>
+      <view class="menu-line"></view>
+    </view>
+    <view class="search-input-wrapper" bindtap="goToSearchPage">
+      <view class="search-icon">
+        <view class="search-circle"></view>
+        <view class="search-handle"></view>
+      </view>
+      <text class="search-placeholder">Search...</text>
+    </view>
+  </view>
+
+  <!-- 可隐藏区域：Logo、分类选择 -->
+  <view class="header-section {{showHeader ? 'show' : 'hide'}}">
+    <!-- Logo区域 -->
+    <view class="logo-section">
+      <view class="vinyl-record">
+        <view class="record-outer">
+          <view class="record-inner">
+            <view class="record-center"></view>
+          </view>
+        </view>
+      </view>
+      <text class="brand-name">Shfl</text>
+    </view>
+
+    <!-- 分类选择区 -->
+    <view class="category-section">
+      <view class="section-title-wrapper">
+        <view class="title-line"></view>
+        <text class="section-title">choose a category</text>
+        <view class="title-line"></view>
+      </view>
+      
+      <view class="category-tags">
+        <view 
+          class="tag {{selectedCategory === item ? 'tag-active' : ''}}" 
+          wx:for="{{categories}}" 
+          wx:key="*this"
+          data-category="{{item}}"
+          bindtap="onCategoryTap"
+        >{{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 随机推荐区 -->
+  <view class="shuffle-section">
+    <!-- 这个标题在隐藏区域外，始终显示 -->
+    <view class="shuffle-title-wrapper {{!showHeader ? 'compact' : ''}}">
+      <view class="title-line"></view>
+      <text class="section-title italic">or trust in chance</text>
+      <view class="title-line"></view>
+    </view>
+    
+    <button class="shuffle-btn {{isShuffling ? 'shuffling' : ''}}" bindtap="onShuffleTap" disabled="{{isShuffling}}">
+      <text wx:if="{{!isShuffling}}">Shfl</text>
+      <view wx:if="{{isShuffling}}" class="shuffle-spinner"></view>
+    </button>
+  </view>
+
+  <!-- 最近推荐区 -->
+  <view class="recent-section">
+    <view class="section-title-wrapper">
+      <view class="title-line"></view>
+      <text class="section-title">recent guides</text>
+      <view class="title-line"></view>
+    </view>
+    
+    <!-- 有数据时显示列表 -->
+    <view class="recent-list" wx:if="{{recentGuides.length > 0}}">
+      <view class="recent-item list-item-{{index % 10}}" wx:for="{{recentGuides}}" wx:key="id" bindtap="onAlbumTap" data-id="{{item.id}}">
+        <image
+          class="recent-image"
+          src="{{item.image}}"
+          mode="aspectFill"
+          lazy-load="true"
+          binderror="onImageError"
+          data-index="{{index}}"
+        />
+        <view class="recent-info">
+          <text class="recent-title">{{item.title}}</text>
+          <text class="recent-artist">{{item.artist}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 无数据时显示空状态 -->
+    <empty-state
+      wx:if="{{!isLoading && recentGuides.length === 0}}"
+      type="empty"
+      bind:retry="onRefresh"
+    />
+  </view>
+</view>

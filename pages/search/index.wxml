@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-header">
+    <view class="back-btn" bindtap="onBackTap">←</view>
+    <view class="search-input-wrapper">
+      <input 
+        class="search-input" 
+        placeholder="Search..." 
+        placeholder-class="placeholder" 
+        value="{{searchKeyword}}" 
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+        confirm-type="search"
+        focus
+      />
+      <view wx:if="{{searchKeyword}}" class="clear-icon" bindtap="onClearTap">×</view>
+    </view>
+    <view class="search-btn" bindtap="onSearch">搜索</view>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view wx:if="{{searchHistory.length > 0}}" class="search-history">
+    <view class="history-header">
+      <text class="history-title">历史记录</text>
+      <view class="delete-icon" bindtap="clearSearchHistory">🗑️</view>
+    </view>
+    <view class="history-list">
+      <view 
+        class="history-item" 
+        wx:for="{{searchHistory}}" 
+        wx:key="*this" 
+        bindtap="onHistoryItemTap" 
+        data-keyword="{{item}}"
+      >
+        <text class="history-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{searchHistory.length === 0}}" class="empty-state">
+    <text>暂无搜索历史</text>
+  </view>
+</view>

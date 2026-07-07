@@ -1,0 +1,10 @@
+<view class="empty-state">
+  <view class="empty-icon">{{config[type].icon}}</view>
+  <text class="empty-title">{{title || config[type].title}}</text>
+  <text class="empty-desc">{{description || config[type].description}}</text>
+  <button
+    wx:if="{{showButton}}"
+    class="empty-btn"
+    bindtap="onButtonTap"
+  >{{buttonText || config[type].buttonText}}</button>
+</view>

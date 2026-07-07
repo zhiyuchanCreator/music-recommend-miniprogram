@@ -1,0 +1,47 @@
+<view class="sidebar-mask {{show ? 'show' : ''}}" bindtap="onMaskTap">
+  <view class="sidebar {{show ? 'show' : ''}}" catchtap="onSidebarTap">
+    <!-- Logo区域 -->
+    <view class="sidebar-logo">
+      <view class="vinyl-record-small">
+        <view class="record-outer-small">
+          <view class="record-inner-small">
+            <view class="record-center-small"></view>
+          </view>
+        </view>
+      </view>
+      <text class="brand-name-small">Shfl</text>
+    </view>
+
+    <!-- 主导航：仅保留有实际页面的入口 -->
+    <view class="nav-section main-nav">
+      <view class="nav-item" bindtap="onNavTap" data-page="home">
+        <view class="nav-icon">⌂</view>
+        <text class="nav-text">Home</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-page="collections">
+        <view class="nav-icon">★</view>
+        <text class="nav-text">My Collections</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-page="bestof">
+        <view class="nav-icon">⭐</view>
+        <text class="nav-text">Best Of</text>
+      </view>
+      <view class="nav-item" bindtap="onNavTap" data-page="search">
+        <view class="nav-icon">🔍</view>
+        <text class="nav-text">Search</text>
+      </view>
+    </view>
+
+    <!-- 登录区域 -->
+    <view class="signin-section">
+      <text class="signin-title">Sign in to Shfl</text>
+      <text class="signin-desc">Sign in to save albums, filter settings, and recommenders.</text>
+      <view class="social-icons">
+        <view class="social-icon" bindtap="onSocialTap" data-type="share">⧉</view>
+      </view>
+    </view>
+
+    <!-- 关闭按钮 -->
+    <view class="close-btn" bindtap="onCloseTap">✕</view>
+  </view>
+</view>

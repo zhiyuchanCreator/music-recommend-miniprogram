@@ -1,0 +1,99 @@
+<view class="skeleton-container {{loading ? 'show' : 'hide'}}" wx:if="{{loading}}">
+  <!-- 首页骨架屏 -->
+  <view wx:if="{{type === 'home'}}" class="skeleton-home">
+    <!-- 搜索栏 -->
+    <view class="skeleton-search">
+      <view class="skeleton-menu"></view>
+      <view class="skeleton-search-box"></view>
+    </view>
+    
+    <!-- Logo区域 -->
+    <view class="skeleton-logo-section">
+      <view class="skeleton-record" animation="{{animation}}"></view>
+      <view class="skeleton-brand" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 分类标签 -->
+    <view class="skeleton-categories">
+      <view class="skeleton-tag" wx:for="{{8}}" wx:key="index" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- Shfl按钮 -->
+    <view class="skeleton-shuffle-section">
+      <view class="skeleton-shuffle-btn" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 最近推荐列表 -->
+    <view class="skeleton-recent-section">
+      <view class="skeleton-section-title" animation="{{animation}}"></view>
+      <view class="skeleton-recent-list">
+        <view class="skeleton-recent-item" wx:for="{{5}}" wx:key="index">
+          <view class="skeleton-image" animation="{{animation}}"></view>
+          <view class="skeleton-info">
+            <view class="skeleton-title" animation="{{animation}}"></view>
+            <view class="skeleton-artist" animation="{{animation}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 详情页骨架屏 -->
+  <view wx:if="{{type === 'detail'}}" class="skeleton-detail">
+    <!-- 封面区域 -->
+    <view class="skeleton-cover-section">
+      <view class="skeleton-cover" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 专辑信息 -->
+    <view class="skeleton-info-section">
+      <view class="skeleton-title-large" animation="{{animation}}"></view>
+      <view class="skeleton-artist-large" animation="{{animation}}"></view>
+      <view class="skeleton-meta" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="skeleton-actions">
+      <view class="skeleton-btn" wx:for="{{3}}" wx:key="index" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 简介 -->
+    <view class="skeleton-description">
+      <view class="skeleton-text-line" wx:for="{{4}}" wx:key="index" animation="{{animation}}"></view>
+    </view>
+  </view>
+
+  <!-- 我的页面骨架屏 -->
+  <view wx:if="{{type === 'my'}}" class="skeleton-my">
+    <!-- 用户信息 -->
+    <view class="skeleton-user-card">
+      <view class="skeleton-avatar" animation="{{animation}}"></view>
+      <view class="skeleton-username" animation="{{animation}}"></view>
+      <view class="skeleton-bio" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 统计卡片 -->
+    <view class="skeleton-stats-card">
+      <view class="skeleton-stat" wx:for="{{2}}" wx:key="index">
+        <view class="skeleton-stat-num" animation="{{animation}}"></view>
+        <view class="skeleton-stat-label" animation="{{animation}}"></view>
+      </view>
+    </view>
+    
+    <!-- 标签栏 -->
+    <view class="skeleton-tabs">
+      <view class="skeleton-tab" wx:for="{{2}}" wx:key="index" animation="{{animation}}"></view>
+    </view>
+    
+    <!-- 列表 -->
+    <view class="skeleton-list">
+      <view class="skeleton-list-item" wx:for="{{6}}" wx:key="index">
+        <view class="skeleton-list-image" animation="{{animation}}"></view>
+        <view class="skeleton-list-info">
+          <view class="skeleton-list-title" animation="{{animation}}"></view>
+          <view class="skeleton-list-subtitle" animation="{{animation}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,714 @@
+.container {
+  min-height: 100vh;
+  background-color: #F8F9FA;
+  position: relative;
+}
+
+/* ========== 顶部导航栏 ========== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88rpx;
+  padding: 0 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.header.with-bg {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20rpx);
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.back-btn, .share-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.back-btn:active, .share-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.back-icon, .share-icon {
+  font-size: 32rpx;
+  color: #1D2129;
+  font-weight: bold;
+}
+
+.share-btn {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.share-btn::after {
+  border: none;
+}
+
+.header-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1D2129;
+  max-width: 400rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.header-title.show {
+  opacity: 1;
+}
+
+/* ========== Hero 区域 - 沉浸式封面 ========== */
+.hero-section {
+  position: relative;
+  padding-top: 88rpx;
+  padding-bottom: 48rpx;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(60rpx) brightness(0.7);
+  transform: scale(1.2);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(248, 249, 250, 1) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 32rpx;
+}
+
+/* 封面包装器 */
+.cover-wrapper {
+  position: relative;
+  margin-bottom: 40rpx;
+}
+
+.cover {
+  width: 480rpx;
+  height: 480rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 24rpx 60rpx rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+}
+
+.cover-wrapper:active .cover {
+  transform: scale(0.98);
+}
+
+/* 播放按钮悬浮层 */
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cover-wrapper:hover .play-overlay,
+.play-overlay:active {
+  opacity: 1;
+}
+
+.play-btn {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+.play-icon {
+  font-size: 48rpx;
+  color: #1D2129;
+  margin-left: 8rpx;
+}
+
+/* 专辑基本信息 */
+.album-basic-info {
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.album-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 16rpx;
+  display: block;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+}
+
+.album-artist {
+  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+/* 评分和年份 */
+.album-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+  position: relative;
+}
+
+.rating-badge {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background-color: rgba(255, 193, 7, 0.9);
+  padding: 8rpx 20rpx;
+  border-radius: 24rpx;
+  position: absolute;
+  right: calc(50% + 20rpx);
+}
+
+.album-year {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  left: calc(50% + 20rpx);
+}
+
+.rating-star {
+  font-size: 24rpx;
+  color: #FFFFFF;
+}
+
+.rating-score {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+/* 风格标签 */
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.genre-tag {
+  padding: 12rpx 28rpx;
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1rpx solid rgba(255, 255, 255, 0.9);
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: #1D2129;
+  font-weight: 500;
+  backdrop-filter: blur(10rpx);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ========== 操作按钮栏 ========== */
+.action-bar {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  padding: 32rpx;
+  margin-top: -24rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 24rpx 48rpx;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.action-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #4A9B8C 0%, #3D8B7C 100%);
+}
+
+.action-btn.primary .action-icon,
+.action-btn.primary .action-text {
+  color: #FFFFFF;
+}
+
+.action-btn.active {
+  background: linear-gradient(135deg, #FFC107 0%, #FFA000 100%);
+}
+
+.action-btn.active .action-icon,
+.action-btn.active .action-text {
+  color: #FFFFFF;
+}
+
+.action-icon {
+  font-size: 40rpx;
+  color: #1D2129;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #4E5969;
+  font-weight: 500;
+}
+
+/* ========== 内容区块 ========== */
+.section {
+  padding: 32rpx;
+  margin-bottom: 16rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1D2129;
+  margin-right: 16rpx;
+  white-space: nowrap;
+}
+
+.section-line {
+  flex: 1;
+  height: 1rpx;
+  background: linear-gradient(90deg, #E5E6EB 0%, transparent 100%);
+}
+
+/* 专辑简介 */
+.description-content {
+  position: relative;
+  padding: 24rpx;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+}
+
+.description-content.collapsed {
+  max-height: 240rpx;
+  overflow: hidden;
+}
+
+.description-content.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80rpx;
+  background: linear-gradient(transparent, #FFFFFF);
+  border-radius: 0 0 16rpx 16rpx;
+}
+
+.description-text {
+  font-size: 28rpx;
+  color: #4E5969;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  margin-top: 24rpx;
+  padding: 16rpx;
+  font-size: 26rpx;
+  color: #4A9B8C;
+  font-weight: 500;
+}
+
+.expand-icon {
+  font-size: 20rpx;
+  transition: transform 0.3s ease;
+}
+
+.expand-icon.up {
+  transform: rotate(180deg);
+}
+
+/* 曲目列表 */
+.track-count {
+  font-size: 24rpx;
+  color: #86909C;
+  margin-left: auto;
+}
+
+.track-list {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.track-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  border-bottom: 1rpx solid #F2F3F5;
+  transition: background-color 0.2s ease;
+}
+
+.track-item:last-child {
+  border-bottom: none;
+}
+
+.track-item:active {
+  background-color: #F8F9FA;
+}
+
+.track-number {
+  width: 48rpx;
+  font-size: 28rpx;
+  color: #86909C;
+  font-weight: 500;
+}
+
+.track-info {
+  flex: 1;
+  margin-right: 24rpx;
+}
+
+.track-name {
+  font-size: 30rpx;
+  color: #1D2129;
+  font-weight: 500;
+}
+
+.track-play-icon {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F2F3F5;
+  border-radius: 50%;
+  font-size: 24rpx;
+  color: #4A9B8C;
+  transition: all 0.2s ease;
+}
+
+.track-item:active .track-play-icon {
+  background-color: #4A9B8C;
+  color: #FFFFFF;
+}
+
+/* 更多信息 */
+.info-section {
+  background-color: #FFFFFF;
+  margin: 0 32rpx 16rpx;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #86909C;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #1D2129;
+  font-weight: 500;
+  max-width: 400rpx;
+  text-align: right;
+}
+
+/* 相似推荐 */
+.similar-scroll {
+  margin: 0 -32rpx;
+  padding: 0 32rpx;
+}
+
+.similar-list {
+  display: flex;
+  gap: 24rpx;
+  padding-bottom: 16rpx;
+}
+
+.similar-item {
+  display: flex;
+  flex-direction: column;
+  width: 240rpx;
+  flex-shrink: 0;
+}
+
+.similar-cover {
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.similar-title {
+  font-size: 28rpx;
+  color: #1D2129;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.similar-artist {
+  font-size: 24rpx;
+  color: #86909C;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 底部占位 */
+.bottom-placeholder {
+  height: 48rpx;
+}
+
+/* ========== 平台选择弹窗 ========== */
+.platform-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.platform-modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.platform-modal-content {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.platform-modal.show .platform-modal-content {
+  transform: translateY(0);
+}
+
+/* 弹窗头部 */
+.platform-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.platform-modal-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1D2129;
+}
+
+.platform-modal-close {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F2F3F5;
+  border-radius: 50%;
+  font-size: 28rpx;
+  color: #86909C;
+}
+
+/* 搜索关键词区域 */
+.search-keyword-section {
+  margin-bottom: 32rpx;
+}
+
+.search-label {
+  font-size: 26rpx;
+  color: #86909C;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.search-keyword-box {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background-color: #F7F8FA;
+  padding: 20rpx 24rpx;
+  border-radius: 16rpx;
+}
+
+.search-keyword {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1D2129;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy-btn {
+  padding: 12rpx 24rpx;
+  background: linear-gradient(135deg, #8B5CF6 0%, #4A9B8C 100%);
+  border-radius: 24rpx;
+}
+
+.copy-btn text {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* 平台列表 */
+.platform-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.platform-item {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 24rpx;
+  background-color: #F7F8FA;
+  border-radius: 16rpx;
+  transition: all 0.2s ease;
+}
+
+.platform-item:active {
+  background-color: #E8E9EB;
+  transform: scale(0.98);
+}
+
+.platform-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.platform-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #1D2129;
+  font-weight: 500;
+}
+
+.platform-arrow {
+  font-size: 36rpx;
+  color: #C9CDD4;
+}
+
+/* 提示信息 */
+.platform-tips {
+  text-align: center;
+  padding: 24rpx 0;
+}
+
+.platform-tips text {
+  font-size: 24rpx;
+  color: #86909C;
+}
+
+/* 加载和空状态 */
+.loading, .empty {
+  text-align: center;
+  padding: 200rpx 40rpx;
+  color: #86909C;
+  font-size: 28rpx;
+}

@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "skeleton": "/components/skeleton/index",
+    "empty-state": "/components/empty-state/index"
+  },
+  "enablePullDownRefresh": false,
+  "onReachBottomDistance": 50,
+  "navigationBarTitleText": "专辑详情",
+  "backgroundColor": "#F8F9FA"
+}

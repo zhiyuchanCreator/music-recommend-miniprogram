@@ -1,0 +1,109 @@
+/**app.wxss**/
+page {
+  background-color: #F8F9FA;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.page {
+  min-height: 100vh;
+  background-color: #F8F9FA;
+}
+
+/* ========== 页面转场动画 ========== */
+
+/* 页面进入动画 - 从右滑入 */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 页面进入动画 - 淡入上浮 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 页面进入动画 - 淡入 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 列表项依次进入动画 */
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 页面容器动画类 */
+.page-enter {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.page-enter-slide {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* 列表项动画 - 依次延迟 */
+.list-item-0 { animation: staggerFadeIn 0.3s ease-out 0s both; }
+.list-item-1 { animation: staggerFadeIn 0.3s ease-out 0.05s both; }
+.list-item-2 { animation: staggerFadeIn 0.3s ease-out 0.1s both; }
+.list-item-3 { animation: staggerFadeIn 0.3s ease-out 0.15s both; }
+.list-item-4 { animation: staggerFadeIn 0.3s ease-out 0.2s both; }
+.list-item-5 { animation: staggerFadeIn 0.3s ease-out 0.25s both; }
+.list-item-6 { animation: staggerFadeIn 0.3s ease-out 0.3s both; }
+.list-item-7 { animation: staggerFadeIn 0.3s ease-out 0.35s both; }
+.list-item-8 { animation: staggerFadeIn 0.3s ease-out 0.4s both; }
+.list-item-9 { animation: staggerFadeIn 0.3s ease-out 0.45s both; }
+
+/* 按钮点击效果 */
+.btn-active {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.btn-active:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 图片加载过渡 */
+.image-fade {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-fade.loaded {
+  opacity: 1;
+}

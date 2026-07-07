@@ -1,0 +1,372 @@
+/* 骨架屏基础样式 */
+.skeleton-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #F8F9FA;
+  z-index: 999;
+  padding: 0 32rpx;
+}
+
+.skeleton-container.show {
+  opacity: 1;
+}
+
+.skeleton-container.hide {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 通用骨架元素样式 */
+.skeleton-block {
+  background: linear-gradient(90deg, #E5E6EB 25%, #F2F3F5 50%, #E5E6EB 75%);
+  background-size: 200% 100%;
+  border-radius: 8rpx;
+}
+
+/* ========== 首页骨架屏 ========== */
+.skeleton-home {
+  padding-top: 24rpx;
+}
+
+/* 搜索栏 */
+.skeleton-search {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #E5E6EB;
+}
+
+.skeleton-menu {
+  width: 40rpx;
+  height: 32rpx;
+  background-color: #E5E6EB;
+  margin-right: 24rpx;
+  border-radius: 4rpx;
+}
+
+.skeleton-search-box {
+  flex: 1;
+  height: 64rpx;
+  background-color: #E5E6EB;
+  border-radius: 32rpx;
+}
+
+/* Logo区域 */
+.skeleton-logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 0;
+}
+
+.skeleton-record {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: #E5E6EB;
+  border-radius: 50%;
+  margin-bottom: 16rpx;
+}
+
+.skeleton-brand {
+  width: 100rpx;
+  height: 40rpx;
+  background-color: #E5E6EB;
+  border-radius: 8rpx;
+}
+
+/* 分类标签 */
+.skeleton-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  justify-content: center;
+  padding: 24rpx 0;
+}
+
+.skeleton-tag {
+  width: 120rpx;
+  height: 56rpx;
+  background-color: #E5E6EB;
+  border-radius: 28rpx;
+}
+
+/* Shfl按钮 */
+.skeleton-shuffle-section {
+  display: flex;
+  justify-content: center;
+  padding: 32rpx 0;
+}
+
+.skeleton-shuffle-btn {
+  width: 200rpx;
+  height: 80rpx;
+  background-color: #E5E6EB;
+  border-radius: 40rpx;
+}
+
+/* 最近推荐 */
+.skeleton-recent-section {
+  padding-top: 24rpx;
+}
+
+.skeleton-section-title {
+  width: 200rpx;
+  height: 36rpx;
+  background-color: #E5E6EB;
+  border-radius: 8rpx;
+  margin: 0 auto 32rpx;
+}
+
+.skeleton-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.skeleton-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.skeleton-image {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: #E5E6EB;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.skeleton-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.skeleton-title {
+  width: 60%;
+  height: 32rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-artist {
+  width: 40%;
+  height: 28rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+/* ========== 详情页骨架屏 ========== */
+.skeleton-detail {
+  padding-top: 24rpx;
+}
+
+.skeleton-cover-section {
+  display: flex;
+  justify-content: center;
+  padding: 48rpx 0;
+}
+
+.skeleton-cover {
+  width: 400rpx;
+  height: 400rpx;
+  background-color: #E5E6EB;
+  border-radius: 24rpx;
+}
+
+.skeleton-info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  padding-bottom: 32rpx;
+}
+
+.skeleton-title-large {
+  width: 70%;
+  height: 48rpx;
+  background-color: #E5E6EB;
+  border-radius: 8rpx;
+}
+
+.skeleton-artist-large {
+  width: 50%;
+  height: 36rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-meta {
+  width: 30%;
+  height: 28rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-actions {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+  padding: 32rpx 0;
+}
+
+.skeleton-btn {
+  width: 160rpx;
+  height: 72rpx;
+  background-color: #E5E6EB;
+  border-radius: 36rpx;
+}
+
+.skeleton-description {
+  padding: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.skeleton-text-line {
+  height: 28rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-text-line:nth-child(1) { width: 100%; }
+.skeleton-text-line:nth-child(2) { width: 90%; }
+.skeleton-text-line:nth-child(3) { width: 95%; }
+.skeleton-text-line:nth-child(4) { width: 60%; }
+
+/* ========== 我的页面骨架屏 ========== */
+.skeleton-my {
+  background: linear-gradient(180deg, #F8F9FA 0%, #FFFFFF 100%);
+  min-height: 100vh;
+}
+
+.skeleton-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 32rpx 40rpx;
+  background: linear-gradient(135deg, #8B5CF6 0%, #4A9B8C 100%);
+}
+
+.skeleton-avatar {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 24rpx;
+}
+
+.skeleton-username {
+  width: 200rpx;
+  height: 40rpx;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.skeleton-bio {
+  width: 280rpx;
+  height: 28rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 6rpx;
+}
+
+.skeleton-stats-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -40rpx 32rpx 32rpx;
+  padding: 32rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.skeleton-stat-num {
+  width: 60rpx;
+  height: 48rpx;
+  background-color: #E5E6EB;
+  border-radius: 8rpx;
+}
+
+.skeleton-stat-label {
+  width: 80rpx;
+  height: 28rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-tabs {
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin: 0 32rpx 32rpx;
+  gap: 8rpx;
+}
+
+.skeleton-tab {
+  flex: 1;
+  height: 80rpx;
+  background-color: #E5E6EB;
+  border-radius: 12rpx;
+}
+
+.skeleton-list {
+  padding: 0 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.skeleton-list-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+}
+
+.skeleton-list-image {
+  width: 100rpx;
+  height: 100rpx;
+  background-color: #E5E6EB;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.skeleton-list-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.skeleton-list-title {
+  width: 60%;
+  height: 32rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}
+
+.skeleton-list-subtitle {
+  width: 40%;
+  height: 26rpx;
+  background-color: #E5E6EB;
+  border-radius: 6rpx;
+}

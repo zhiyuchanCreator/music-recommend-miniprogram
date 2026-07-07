@@ -1,0 +1,28 @@
+# ===== 依赖（不入库） =====
+node_modules/
+miniprogram_npm/
+cloudfunctions/*/node_modules/
+
+# ===== 微信开发者工具私有配置（本机相关，自动生成） =====
+project.private.config.json
+
+# ===== 打包时排除的导入数据（如生成会出现） =====
+data/albums_for_import.json
+
+# ===== 日志 =====
+*.log
+npm-debug.log*
+
+# ===== 编辑器 / IDE =====
+.idea/
+.vscode/
+*.swp
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+
+# ===== 压缩包 / 临时文件 =====
+*.zip
+*.tar.gz
+*.tmp

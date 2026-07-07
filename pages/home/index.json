@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "Shfl",
+  "usingComponents": {
+    "sidebar": "/components/sidebar/index",
+    "skeleton": "/components/skeleton/index",
+    "empty-state": "/components/empty-state/index"
+  },
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
+  "backgroundColor": "#F8F9FA"
+}

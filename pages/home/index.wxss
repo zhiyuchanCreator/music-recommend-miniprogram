@@ -1,0 +1,400 @@
+.container {
+  padding: 0 32rpx;
+  background-color: #F8F9FA;
+  min-height: 100vh;
+  padding-bottom: 200rpx; /* 底部留白，确保可以滚动 */
+}
+
+/* 金刚区 - 可隐藏的区域 */
+.header-section {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.header-section.show {
+  max-height: 800rpx;
+  opacity: 1;
+  margin-bottom: 24rpx; /* 展开时增加底部间距 */
+}
+
+.header-section.hide {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: -20rpx; /* 隐藏时减少底部间距 */
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #E5E6EB;
+}
+
+.menu-icon {
+  width: 40rpx;
+  height: 32rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 24rpx;
+}
+
+.menu-line {
+  width: 100%;
+  height: 4rpx;
+  background-color: #86909C;
+  border-radius: 2rpx;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #F2F3F5;
+  border-radius: 32rpx;
+  padding: 16rpx 24rpx;
+}
+
+.search-placeholder {
+  font-size: 28rpx;
+  color: #86909C;
+}
+
+.search-icon {
+  width: 28rpx;
+  height: 28rpx;
+  position: relative;
+  margin-right: 16rpx;
+}
+
+.search-circle {
+  width: 20rpx;
+  height: 20rpx;
+  border: 3rpx solid #86909C;
+  border-radius: 50%;
+}
+
+.search-handle {
+  width: 10rpx;
+  height: 3rpx;
+  background-color: #86909C;
+  position: absolute;
+  bottom: 2rpx;
+  right: 0;
+  transform: rotate(45deg);
+  border-radius: 2rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #1D2129;
+}
+
+.search-btn {
+  font-size: 26rpx;
+  color: #4A9B8C;
+  margin-left: 16rpx;
+  padding: 8rpx 16rpx;
+}
+
+.placeholder {
+  color: #86909C;
+}
+
+/* 搜索历史 */
+.search-history {
+  padding: 24rpx 32rpx;
+  background-color: #FFFFFF;
+  margin-bottom: 24rpx;
+  border-radius: 16rpx;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.history-title {
+  font-size: 28rpx;
+  color: #1D2129;
+  font-weight: 500;
+}
+
+.clear-btn {
+  font-size: 26rpx;
+  color: #86909C;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  background-color: #F2F3F5;
+  padding: 12rpx 20rpx;
+  border-radius: 28rpx;
+}
+
+.history-text {
+  font-size: 26rpx;
+  color: #4E5969;
+  margin-right: 12rpx;
+}
+
+.delete-icon {
+  font-size: 28rpx;
+  color: #86909C;
+  width: 32rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo区域 */
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 0;
+}
+
+.vinyl-record {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: 16rpx;
+}
+
+.record-outer {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #2C2C2C 0%, #1A1A1A 50%, #2C2C2C 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.record-outer::before {
+  content: '';
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0,
+    transparent 3rpx,
+    rgba(255, 255, 255, 0.05) 3rpx,
+    rgba(255, 255, 255, 0.05) 6rpx
+  );
+}
+
+.record-inner {
+  width: 40%;
+  height: 40%;
+  background-color: #C41E3A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-center {
+  width: 20%;
+  height: 20%;
+  background-color: #F8F9FA;
+  border-radius: 50%;
+}
+
+.brand-name {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #1D2129;
+  letter-spacing: 2rpx;
+}
+
+/* 分类区域 */
+.category-section {
+  margin-bottom: 64rpx; /* 增加底部间距，确保标签完全显示 */
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+}
+
+.title-line {
+  flex: 1;
+  height: 1rpx;
+  background-color: #E5E6EB;
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #1D2129;
+  padding: 0 24rpx;
+  font-weight: 500;
+}
+
+.section-title.italic {
+  font-style: italic;
+}
+
+.category-tags {
+  text-align: center;
+  padding: 16rpx;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 32rpx;
+  margin: 12rpx 20rpx;
+  background-color: #F5F5F5;
+  border: 2rpx solid #D9D9D9;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: #4A9B8C;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.tag-active {
+  background-color: #4A9B8C;
+  color: #FFFFFF;
+}
+
+/* 随机推荐区 */
+.shuffle-section {
+  margin-bottom: 48rpx;
+  padding-top: 24rpx; /* 增加顶部间距 */
+}
+
+/* Shuffle标题包装器 */
+.shuffle-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+  transition: all 0.3s ease;
+}
+
+/* 紧凑模式（当header隐藏时） */
+.shuffle-title-wrapper.compact {
+  margin-bottom: 24rpx;
+  margin-top: 16rpx;
+}
+
+.shuffle-btn {
+  width: 280rpx;
+  height: 88rpx;
+  background-color: #3B5A6F;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.shuffle-btn::after {
+  border: none;
+}
+
+.shuffle-btn:active {
+  opacity: 0.9;
+  transform: scale(0.96);
+}
+
+.shuffle-btn[disabled] {
+  background-color: #5A7A8F;
+}
+
+/* Shfl 按钮旋转动画 */
+.shuffle-btn.shuffling {
+  width: 88rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4A9B8C 0%, #3D8B7C 100%);
+}
+
+.shuffle-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 最近推荐区 */
+.recent-section {
+  padding-bottom: 48rpx;
+  min-height: 1200rpx; /* 确保即使内容少也能滚动 */
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  min-height: 800rpx; /* 列表区域最小高度 */
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.recent-image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+}
+
+.recent-info {
+  flex: 1;
+}
+
+.recent-title {
+  font-size: 30rpx;
+  color: #1D2129;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.recent-artist {
+  font-size: 26rpx;
+  color: #86909C;
+}

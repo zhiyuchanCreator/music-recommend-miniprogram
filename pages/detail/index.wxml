@@ -1,0 +1,205 @@
+<!-- 骨架屏 -->
+<skeleton type="detail" loading="{{loading}}"></skeleton>
+
+<view class="container page-enter-slide" wx:if="{{!loading && album}}">
+  <!-- 顶部导航栏 - 透明背景 -->
+  <view class="header {{showHeaderBg ? 'with-bg' : ''}}">
+    <view class="back-btn" bindtap="onBackTap">
+      <text class="back-icon">←</text>
+    </view>
+    <text class="header-title {{showHeaderBg ? 'show' : ''}}">{{album.title}}</text>
+    <button class="share-btn" open-type="share">
+      <text class="share-icon">↗</text>
+    </button>
+  </view>
+
+  <!-- 专辑封面区域 - 沉浸式背景 -->
+  <view class="hero-section">
+    <!-- 背景模糊图 -->
+    <image class="hero-bg" src="{{album.coverUrl}}" mode="aspectFill"/>
+    <view class="hero-overlay"></view>
+
+    <!-- 封面内容 -->
+    <view class="hero-content">
+      <view class="cover-wrapper">
+        <image class="cover" src="{{album.coverUrl}}" mode="aspectFill" lazy-load="true"/>
+        <!-- 播放按钮悬浮在封面上 -->
+        <view class="play-overlay" bindtap="onPlayTap">
+          <view class="play-btn">
+            <text class="play-icon">▶</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 专辑基本信息 -->
+      <view class="album-basic-info">
+        <text class="album-title">{{album.title}}</text>
+        <text class="album-artist">{{album.artist}}</text>
+
+        <!-- 评分和年份 -->
+        <view class="album-meta">
+          <view class="rating-badge" wx:if="{{album.rating}}">
+            <text class="rating-star">★</text>
+            <text class="rating-score">{{album.rating}}</text>
+          </view>
+          <text class="meta-divider" wx:if="{{album.rating && album.year}}">·</text>
+          <text class="album-year" wx:if="{{album.year}}">{{album.year}}</text>
+        </view>
+
+        <!-- 风格标签 -->
+        <view class="genre-list" wx:if="{{genreTags.length > 0}}">
+          <text class="genre-tag" wx:for="{{genreTags}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮栏 -->
+  <view class="action-bar">
+    <view class="action-btn primary {{isFavorite ? 'active' : ''}}" bindtap="onFavoriteTap">
+      <text class="action-icon">{{isFavorite ? '★' : '☆'}}</text>
+      <text class="action-text">{{isFavorite ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-btn" bindtap="onPlayTap">
+      <text class="action-icon">▶</text>
+      <text class="action-text">播放</text>
+    </view>
+    <view class="action-btn" bindtap="onShareTap">
+      <text class="action-icon">↗</text>
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+
+  <!-- 专辑简介 -->
+  <view class="section" wx:if="{{album.description}}">
+    <view class="section-header">
+      <text class="section-title">专辑简介</text>
+      <view class="section-line"></view>
+    </view>
+    <view class="description-content {{isDescExpanded ? 'expanded' : 'collapsed'}}">
+      <text class="description-text">{{album.description}}</text>
+    </view>
+    <view class="expand-btn" wx:if="{{showExpandBtn}}" bindtap="toggleDesc">
+      <text>{{isDescExpanded ? '收起' : '展开更多'}}</text>
+      <text class="expand-icon {{isDescExpanded ? 'up' : ''}}">▼</text>
+    </view>
+  </view>
+
+  <!-- 曲目列表 -->
+  <view class="section" wx:if="{{trackList.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">曲目列表</text>
+      <text class="track-count">{{trackList.length}} 首</text>
+    </view>
+    <view class="track-list">
+      <view class="track-item" wx:for="{{trackList}}" wx:key="index" bindtap="onTrackTap" data-index="{{index}}">
+        <text class="track-number">{{index + 1}}</text>
+        <view class="track-info">
+          <text class="track-name">{{item}}</text>
+        </view>
+        <text class="track-play-icon">▶</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 更多信息 -->
+  <view class="section info-section">
+    <view class="section-header">
+      <text class="section-title">更多信息</text>
+      <view class="section-line"></view>
+    </view>
+    <view class="info-list">
+      <view class="info-item" wx:if="{{album.label}}">
+        <text class="info-label">唱片公司</text>
+        <text class="info-value">{{album.label}}</text>
+      </view>
+      <view class="info-item" wx:if="{{album.producer}}">
+        <text class="info-label">制作人</text>
+        <text class="info-value">{{album.producer}}</text>
+      </view>
+      <view class="info-item" wx:if="{{album.duration}}">
+        <text class="info-label">时长</text>
+        <text class="info-value">{{album.duration}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">数据来源</text>
+        <text class="info-value">{{album.source || 'Mock'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 相似推荐 -->
+  <view class="section" wx:if="{{similarAlbums.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">相似推荐</text>
+      <view class="section-line"></view>
+    </view>
+    <scroll-view class="similar-scroll" scroll-x="true" enable-flex="true">
+      <view class="similar-list">
+        <view class="similar-item" wx:for="{{similarAlbums}}" wx:key="id" bindtap="onSimilarTap" data-id="{{item.id}}">
+          <image class="similar-cover" src="{{item.coverUrl}}" mode="aspectFill" lazy-load="true"/>
+          <text class="similar-title">{{item.title}}</text>
+          <text class="similar-artist">{{item.artist}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="bottom-placeholder"></view>
+
+  <!-- 平台选择弹窗 -->
+  <view class="platform-modal {{showPlatformModal ? 'show' : ''}}" bindtap="closePlatformModal">
+    <view class="platform-modal-content" catchtap="preventClose">
+      <!-- 弹窗头部 -->
+      <view class="platform-modal-header">
+        <text class="platform-modal-title">选择播放平台</text>
+        <view class="platform-modal-close" bindtap="closePlatformModal">
+          <text>✕</text>
+        </view>
+      </view>
+      
+      <!-- 搜索关键词 -->
+      <view class="search-keyword-section">
+        <text class="search-label">搜索关键词</text>
+        <view class="search-keyword-box">
+          <text class="search-keyword">{{searchKeyword}}</text>
+          <view class="copy-btn" bindtap="onCopyKeyword">
+            <text>复制</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 平台列表 -->
+      <view class="platform-list">
+        <view class="platform-item" 
+              wx:for="{{platforms}}" 
+              wx:key="id"
+              bindtap="onPlatformSelect"
+              data-platform="{{item}}"
+              style="--platform-color: {{item.color}}">
+          <view class="platform-icon" style="background-color: {{item.color}}20; color: {{item.color}}">
+            <text>{{item.icon}}</text>
+          </view>
+          <text class="platform-name">{{item.name}}</text>
+          <text class="platform-arrow">›</text>
+        </view>
+      </view>
+      
+      <!-- 提示信息 -->
+      <view class="platform-tips">
+        <text>点击平台将跳转至对应小程序搜索</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 空状态 -->
+<empty-state
+  wx:if="{{!loading && !album}}"
+  type="error"
+  title="专辑不存在"
+  description="该专辑可能已被删除或不存在"
+  buttonText="返回首页"
+  bind:retry="onBackTap"
+/>
