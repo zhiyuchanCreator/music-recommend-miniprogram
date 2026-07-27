@@ -12,6 +12,13 @@
 - 👤 **我的（my）**：个人中心
 - 🧩 **自定义底部 Tab（custom-tab-bar）** 与可复用组件（sidebar / skeleton / empty-state）
 
+## 技术栈
+
+- **前端**：微信小程序原生开发（WXML / WXSS / JS），自定义组件与自定义 tabBar
+- **后端**：微信云开发（CloudBase），5 个云函数管理专辑数据（增删改查 / 去重 / 流派更新）
+- **数据采集**：Python + Scrapy 爬虫（spider/），采集专辑数据后清洗入库
+- **工程化**：npm 依赖管理，scripts/ 提供数据导入与部署辅助脚本
+
 ## 目录结构
 
 ```
