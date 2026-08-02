@@ -3,10 +3,6 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "cloudfunctions/importData"
-      },
-      {
         "type": "file",
         "value": "data/albums_for_import.json"
       }
@@ -63,5 +59,6 @@
   "projectname": "miniprogram-1",
   "condition": {},
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

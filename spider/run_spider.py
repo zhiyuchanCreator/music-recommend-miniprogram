@@ -105,7 +105,7 @@ def run_mock_spider(limit=50):
         
         # 添加封面URL和ID
         album['_id'] = f"album_{i+1:03d}"
-        album['coverUrl'] = f"https://picsum.photos/id/{random.randint(1, 200)}/300/300"
+        album['coverUrl'] = None
         album['source'] = 'Mock'
         
         # 字段映射（兼容小程序数据结构）

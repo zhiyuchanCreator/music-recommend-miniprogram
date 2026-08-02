@@ -1,3 +1,5 @@
+const { create: createShflCore } = require('../../utils/shfl-core.js');
+
 Page({
   data: {
     album: null,
@@ -6,16 +8,18 @@ Page({
     loading: true,
     isFavorite: false,
     albumId: '',
+    category: '', // 当前分类过滤
     showHeaderBg: false, // 控制导航栏背景
     isDescExpanded: false, // 简介是否展开
     showExpandBtn: false, // 是否显示展开按钮
-    similarAlbums: [] // 相似推荐
+    similarAlbums: [], // 相似推荐
+    isShuffling: false // 再 Shfl 一次加载状态
   },
 
   onLoad(options) {
-    const { id } = options;
+    const { id, category } = options;
     if (id) {
-      this.setData({ albumId: id });
+      this.setData({ albumId: id, category: category || '' });
       this.loadAlbumDetail(id);
       this.checkFavoriteStatus(id);
       this.addToHistory(id);
@@ -264,37 +268,16 @@ Page({
       {
         id: 'netease',
         name: '网易云音乐',
-        icon: '☁️',
+        icon: '/images/icons/netease-music.png',
         color: '#C20C0C',
         url: `orpheus://search/${encodeURIComponent(searchKeyword)}`
       },
       {
         id: 'qq',
         name: 'QQ音乐',
-        icon: '🎵',
+        icon: '/images/icons/qq-music.png',
         color: '#31C27C',
         url: `qqmusic://qq.com/search?keyword=${encodeURIComponent(searchKeyword)}`
-      },
-      {
-        id: 'qishui',
-        name: '汽水音乐',
-        icon: '🥤',
-        color: '#FF6B6B',
-        url: `qishui://search?keyword=${encodeURIComponent(searchKeyword)}`
-      },
-      {
-        id: 'spotify',
-        name: 'Spotify',
-        icon: '🟢',
-        color: '#1DB954',
-        url: `spotify://search/${encodeURIComponent(searchKeyword)}`
-      },
-      {
-        id: 'applemusic',
-        name: 'Apple Music',
-        icon: '🍎',
-        color: '#FA243C',
-        url: `music://search?term=${encodeURIComponent(searchKeyword)}`
       }
     ];
 
@@ -312,69 +295,103 @@ Page({
   },
 
   // 选择平台跳转
+  // 策略：先复制搜索词到剪贴板（无论是否跳转都做），再用真实可用的跳转方式打开目标平台
+  // 1. 有 shortLink：用 shortLink 跳转（无需 appId，最稳）
+  // 2. 有 appId：用 appId 跳转（注意 path 可能是猜的，跳转后可能落到对方首页）
+  // 3. 都没有：弹 modal 提示用户手动去 App 搜索（关键词已复制）
   onPlatformSelect(e) {
     const { platform } = e.currentTarget.dataset;
     const { searchKeyword } = this.data;
-    
+
     this.closePlatformModal();
-    
-    // 检查是否有小程序AppId
+
+    const shortLink = this.getShortLink(platform.id);
     const appId = this.getAppId(platform.id);
-    
-    if (appId) {
-      // 有小程序，尝试跳转
+
+    if (shortLink) {
+      // 优先用 shortLink 跳转
+      wx.navigateToMiniProgram({
+        shortLink: shortLink,
+        success: () => {
+          console.log('[跳转成功] shortLink:', platform.name);
+          this.copyKeywordWithToast(searchKeyword, '已复制，请粘贴搜索');
+        },
+        fail: (err) => {
+          console.error('[跳转失败] shortLink:', platform.name, err);
+          this.copyKeywordWithToast(searchKeyword, '关键词已复制，请手动前往App搜索');
+        }
+      });
+    } else if (appId) {
+      // 其次用 appId 跳转
       wx.navigateToMiniProgram({
         appId: appId,
         path: this.getMiniProgramPath(platform.id, searchKeyword),
+        success: () => {
+          console.log('[跳转成功] appId:', platform.name);
+          this.copyKeywordWithToast(searchKeyword, '已复制，请粘贴搜索');
+        },
         fail: (err) => {
-          this.showFallbackOptions(platform, searchKeyword);
+          console.error('[跳转失败] appId:', platform.name, err);
+          this.copyKeywordWithToast(searchKeyword, '关键词已复制，请手动前往App搜索');
         }
       });
     } else {
-      // 无小程序，直接提示复制搜索词
+      // 兜底：弹 modal 让用户主动复制
       wx.showModal({
-        title: `${platform.name}`,
+        title: platform.name,
         content: `${platform.name} 暂不支持直接跳转，是否复制搜索关键词？`,
         confirmText: '复制关键词',
         cancelText: '取消',
         success: (res) => {
           if (res.confirm) {
-            wx.setClipboardData({
-              data: searchKeyword,
-              success: () => {
-                wx.showToast({
-                  title: '已复制，请前往APP搜索',
-                  icon: 'none',
-                  duration: 2000
-                });
-              }
-            });
+            this.copyKeywordWithToast(searchKeyword, '已复制，请前往APP搜索');
           }
         }
       });
     }
   },
 
+  // 复制搜索关键词并 toast
+  copyKeywordWithToast(keyword, message) {
+    wx.setClipboardData({
+      data: keyword,
+      success: () => {
+        wx.showToast({ title: message, icon: 'none', duration: 2000 });
+      }
+    });
+  },
+
   // 获取小程序AppId
+  // 公开渠道（包括 QQ 音乐开放平台、第三方 appId 列表）都无法拿到稳定的 appId，
+  // 实测网易云/QQ音乐的 appId 都报 invalid appid。
+  // 因此暂时全部置空，所有平台走"复制搜索词"路径（详见 onPlatformSelect 的 else 分支）。
+  // 后续如果你能拿到真实 shortLink（微信 → 目标小程序 → ⋯ → 复制链接），
+  // 可以填到下面 shortLinks 里，恢复跳转体验。
   getAppId(platformId) {
     const appIds = {
-      'netease': 'wx8abaf006eebd0ea8',  // 网易云音乐小程序
-      'qq': 'wxc305711a7a0f6075',        // QQ音乐小程序
-      'qishui': '',                      // 汽水音乐暂无小程序，使用H5或APP跳转
-      'spotify': '',                     // Spotify 国内无小程序
-      'applemusic': ''                   // Apple Music 暂无小程序
+      'netease': '',
+      'qq': ''
     };
     return appIds[platformId] || '';
   },
 
+  // shortLink 兜底跳转（基础库 2.18.1+）
+  // 填入方式：在微信里打开目标小程序 → 右上角 ⋯ → 复制链接，把整条链接粘到对应字段。
+  getShortLink(platformId) {
+    const shortLinks = {
+      'netease': '#小程序://网易云音乐听歌/rY4Uw5mPyMRfHoB',  // 注意：这是"网易云音乐听歌"小程序，不是"网易云音乐"主小程序
+      'qq': '#小程序://QQ音乐/TthLgLYYaLreVbH'
+    };
+    return shortLinks[platformId] || '';
+  },
+
   // 获取小程序路径
+  // 注意：path 是猜的，对方小程序不一定有此页面。
+  // 如果跳转后落到对方首页而不是搜索页，说明 path 不对，删掉 path 让它跳首页即可。
   getMiniProgramPath(platformId, keyword) {
     const paths = {
       'netease': `pages/search/index?keyword=${encodeURIComponent(keyword)}`,
-      'qq': `pages/search/index?keyword=${encodeURIComponent(keyword)}`,
-      'kugou': `pages/search/index?keyword=${encodeURIComponent(keyword)}`,
-      'kuwo': `pages/search/index?keyword=${encodeURIComponent(keyword)}`,
-      'migu': `pages/search/index?keyword=${encodeURIComponent(keyword)}`
+      'qq': `pages/search/index?keyword=${encodeURIComponent(keyword)}`
     };
     return paths[platformId] || '';
   },
@@ -460,6 +477,55 @@ Page({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     });
+  },
+
+  // 再 Shfl 一次：复用 ShflCore 循环
+  onShuffleTap() {
+    if (this.data.isShuffling) return;
+
+    this.setData({ isShuffling: true });
+    wx.showLoading({ title: '正在寻找好音乐...', mask: true });
+
+    wx.cloud.callFunction({ name: 'getAlbums' })
+      .then(res => {
+        const result = res.result;
+        if (!result.success || !result.albums || result.albums.length === 0) {
+          throw new Error('暂无推荐数据');
+        }
+
+        const shflCore = createShflCore().init(result.albums);
+        if (this.data.category) {
+          shflCore.setCategory(this.data.category);
+        }
+
+        // 把当前专辑标记为已看过，避免立即又摇到同一张
+        const currentAlbum = this.data.album;
+        if (currentAlbum) {
+          shflCore.markSeen(currentAlbum);
+        }
+
+        const nextAlbum = shflCore.next();
+        wx.hideLoading();
+        this.setData({ isShuffling: false });
+
+        if (!nextAlbum) {
+          wx.showToast({ title: '暂无推荐', icon: 'none' });
+          return;
+        }
+
+        const url = this.data.category
+          ? `/pages/detail/index?id=${nextAlbum._id}&category=${encodeURIComponent(this.data.category)}`
+          : `/pages/detail/index?id=${nextAlbum._id}`;
+
+        // 用 redirectTo 替换当前详情页，避免页面堆叠过深
+        wx.redirectTo({ url });
+      })
+      .catch(err => {
+        wx.hideLoading();
+        this.setData({ isShuffling: false });
+        console.error('[Detail] Shuffle failed:', err);
+        wx.showToast({ title: '推荐失败', icon: 'error' });
+      });
   },
 
   onBackTap() {

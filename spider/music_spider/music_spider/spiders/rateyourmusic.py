@@ -189,7 +189,7 @@ class MockAlbumSpider(scrapy.Spider):
             item['year'] = album_data['year']
             item['genre'] = album_data['genre']
             item['rating'] = album_data['rating']
-            item['cover_url'] = f"https://picsum.photos/id/{random.randint(1, 200)}/300/300"
+            item['cover_url'] = None
             item['description'] = f"A great album by {album_data['artist']}"
             item['source'] = 'Mock'
             

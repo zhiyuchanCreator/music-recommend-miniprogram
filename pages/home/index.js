@@ -1,4 +1,5 @@
 const SEARCH_HISTORY_KEY = 'search_history';
+const { create: createShflCore } = require('../../utils/shfl-core.js');
 
 Page({
   data: {
@@ -186,7 +187,8 @@ Page({
         const result = res.result;
 
         if (result.success && result.albums && result.albums.length > 0) {
-          const recentGuides = result.albums.map(album => ({
+          this.shflCore = createShflCore().init(result.albums);
+          const recentGuides = this.shflCore.getPool().map(album => ({
             id: album._id,
             title: album.title,
             artist: album.artist,
@@ -215,8 +217,9 @@ Page({
     try {
       const localData = require('../../data/albums.js');
       const albums = localData.albums || [];
+      this.shflCore = createShflCore().init(albums);
 
-      const recentGuides = albums.slice(0, 5).map(album => ({
+      const recentGuides = this.shflCore.getPool().slice(0, 5).map(album => ({
         id: album._id,
         title: album.title,
         artist: album.artist,
@@ -256,44 +259,29 @@ Page({
     // 如果点击的是已选中的分类，则取消筛选
     if (isSameCategory) {
       this.setData({ selectedCategory: '' });
-      this.loadAlbums(); // 重新加载全部
+      this.filterByCategory(''); // 重置筛选
     } else {
       this.setData({ selectedCategory: category });
       this.filterByCategory(category); // 按分类筛选
     }
   },
 
-  // 按分类筛选专辑
+  // 按分类筛选专辑（复用 ShflCore 的过滤池，保证列表与 shuffle 一致）
   filterByCategory(category) {
-    const db = wx.cloud.database();
-    
-    wx.showLoading({ title: '筛选中...' });
-    
-    db.collection('albums')
-      .where({
-        genre: db.RegExp({
-          regexp: category,
-          options: 'i'
-        })
-      })
-      .get()
-      .then(res => {
-        wx.hideLoading();
-        
-        const filtered = res.data.map(album => ({
-          id: album._id,
-          title: album.title,
-          artist: album.artist,
-          image: album.coverUrl
-        }));
-        
-        this.setData({ recentGuides: filtered });
-      })
-      .catch(err => {
-        wx.hideLoading();
-        console.error('[Home] Filter failed:', err);
-        wx.showToast({ title: '筛选失败', icon: 'error' });
-      });
+    if (!this.shflCore) {
+      wx.showToast({ title: '数据未加载', icon: 'none' });
+      return;
+    }
+
+    this.shflCore.setCategory(category);
+    const filtered = this.shflCore.getPool().map(album => ({
+      id: album._id,
+      title: album.title,
+      artist: album.artist,
+      image: album.coverUrl
+    }));
+
+    this.setData({ recentGuides: filtered });
   },
 
   onShuffleTap() {
@@ -306,49 +294,42 @@ Page({
       mask: true
     });
 
-    // 从云数据库随机获取一张专辑
-    const db = wx.cloud.database();
-    db.collection('albums')
-      .get()
-      .then(res => {
-        wx.hideLoading();
-        this.setData({ isShuffling: false });
+    if (!this.shflCore) {
+      wx.hideLoading();
+      this.setData({ isShuffling: false });
+      wx.showToast({ title: '数据未加载', icon: 'none' });
+      return;
+    }
 
-        if (res.data && res.data.length > 0) {
-          // 随机选择一张专辑
-          const randomIndex = Math.floor(Math.random() * res.data.length);
-          const randomAlbum = res.data[randomIndex];
+    // 执行 Shfl 核心循环：从核心中选出下一张专辑
+    const nextAlbum = this.shflCore.next();
 
-          // 添加延迟让过渡更自然
-          setTimeout(() => {
-            wx.navigateTo({
-              url: `/pages/detail/index?id=${randomAlbum._id}`
-            });
-          }, 800);
-        } else {
-          this.setData({ isShuffling: false });
-          wx.showToast({
-            title: '暂无推荐',
-            icon: 'none'
-          });
-        }
-      })
-      .catch(err => {
-        this.setData({ isShuffling: false });
-        wx.hideLoading();
-        console.error('[Home] Shuffle failed:', err);
-        wx.showToast({
-          title: '推荐失败',
-          icon: 'error'
-        });
-      });
+    wx.hideLoading();
+
+    if (!nextAlbum) {
+      this.setData({ isShuffling: false });
+      wx.showToast({ title: '暂无推荐', icon: 'none' });
+      return;
+    }
+
+    // 添加延迟让过渡更自然
+    setTimeout(() => {
+      this.setData({ isShuffling: false });
+      const category = this.shflCore ? this.shflCore.getCategory() : '';
+      const url = category
+        ? `/pages/detail/index?id=${nextAlbum._id}&category=${encodeURIComponent(category)}`
+        : `/pages/detail/index?id=${nextAlbum._id}`;
+      wx.navigateTo({ url });
+    }, 800);
   },
 
   onAlbumTap(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/detail/index?id=${id}`
-    });
+    const category = this.data.selectedCategory;
+    const url = category
+      ? `/pages/detail/index?id=${id}&category=${encodeURIComponent(category)}`
+      : `/pages/detail/index?id=${id}`;
+    wx.navigateTo({ url });
   },
 
   onSearchInput(e) {
@@ -373,7 +354,7 @@ Page({
   // 图片加载失败处理
   onImageError(e) {
     const index = e.currentTarget.dataset.index;
-    const defaultImage = 'https://picsum.photos/seed/music/300/300';
+    const defaultImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
 
     // 更新对应索引的图片为默认图
     const recentGuides = this.data.recentGuides;

@@ -12,6 +12,68 @@
       <text class="user-bio">发现好音乐，分享好时光</text>
     </view>
 
+    <!-- 专辑墙 -->
+    <view class="wall-section" wx:if="{{wallAlbums.length > 0}}">
+      <view class="wall-header">
+        <text class="wall-title">专辑墙</text>
+        <view class="wall-actions">
+          <view class="wall-change-btn" bindtap="onChangeWallMode">
+            <text>切换</text>
+            <text class="wall-change-target">{{wallMode === 'favorites' || (wallMode === 'auto' && favorites.length >= 3) ? '历史' : '收藏'}}</text>
+          </view>
+          <view class="wall-expand-btn" bindtap="onToggleWallExpand">
+            <text>{{isWallExpanded ? '收起' : '展开'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 横向滚动模式 -->
+      <view
+        wx:if="{{!isWallExpanded}}"
+        class="wall-scroll"
+      >
+        <view
+          class="wall-track {{wallAlbums.length > 1 ? 'wall-track-animated' : ''}}"
+          style="animation-duration: {{wallTrackDuration}}s;"
+        >
+          <view
+            class="wall-item"
+            hover-class="wall-item-hover"
+            hover-stay-time="600"
+            wx:for="{{wallAlbumsLoop}}"
+            wx:key="index"
+            data-id="{{item.id}}"
+            bindtap="onWallItemTap"
+            bindlongpress="onWallItemLongPress"
+          >
+            <image class="wall-cover" src="{{item.coverUrl}}" mode="aspectFill"/>
+            <view class="wall-pin-badge" wx:if="{{item.isPinned}}">
+              <text>📌</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 展开网格模式：一行三张 -->
+      <view wx:else class="wall-grid">
+        <view
+          class="wall-grid-item"
+          hover-class="wall-item-hover"
+          hover-stay-time="600"
+          wx:for="{{wallAlbums}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onWallItemTap"
+          bindlongpress="onWallItemLongPress"
+        >
+          <image class="wall-grid-cover" src="{{item.coverUrl}}" mode="aspectFill"/>
+          <view class="wall-pin-badge" wx:if="{{item.isPinned}}">
+            <text>📌</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <!-- 统计卡片 -->
     <view class="stats-card">
       <view class="stat-item" bindtap="switchToTab" data-tab="favorites">
