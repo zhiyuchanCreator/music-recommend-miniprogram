@@ -12,7 +12,7 @@ const cloud = require('wx-server-sdk');
 // 配置
 const CONFIG = {
   // 云开发环境ID（请替换为你的环境ID）
-  env: 'YOUR_CLOUD_ENV_ID',
+  env: '<YOUR_ENV_ID>',
   // 集合名称
   collection: 'albums',
   // 每批导入数量

@@ -1,4 +1,5 @@
 const SEARCH_HISTORY_KEY = 'search_history';
+const ALBUM_CACHE_KEY = 'album_cache';
 const { create: createShflCore } = require('../../utils/shfl-core.js');
 
 Page({
@@ -10,6 +11,9 @@ Page({
     searchHistory: [],
     showHeader: true, // 控制金刚区显示/隐藏
     isLoading: true, // 骨架屏加载状态
+    loadError: false, // 是否加载失败
+    errorType: 'empty', // empty / error / network / offline / fatal
+    offlineMode: false, // 是否使用了本地缓存/兜底数据
     categories: [
       'rock', 'jazz', 'pop', 'electronic', 'hip hop',
       'classical', 'metal', 'r&b', 'soul', 'reggae & dub',
@@ -33,7 +37,7 @@ Page({
 
   // 刷新数据
   onRefresh() {
-    this.setData({ isLoading: true });
+    this.setData({ isLoading: true, loadError: false, offlineMode: false });
     this.loadAlbums(() => {
       wx.stopPullDownRefresh();
     });
@@ -187,6 +191,8 @@ Page({
         const result = res.result;
 
         if (result.success && result.albums && result.albums.length > 0) {
+          // 写入本地缓存
+          this.saveAlbumCache(result.albums);
           this.shflCore = createShflCore().init(result.albums);
           const recentGuides = this.shflCore.getPool().map(album => ({
             id: album._id,
@@ -196,46 +202,99 @@ Page({
           }));
           this.setData({
             recentGuides,
-            isLoading: false
+            isLoading: false,
+            loadError: false,
+            offlineMode: false
           });
-        } else {
-          // 云数据库为空，使用本地数据
-          this.loadFromLocal(callback);
+          if (callback) callback();
           return;
         }
-        if (callback) callback();
+
+        // 云数据库为空，尝试本地缓存或兜底数据
+        this.tryOfflineFallback(callback, 'empty');
       })
       .catch(err => {
         console.error('[Home] Failed to load from cloud:', err);
-        // 云开发失败，使用本地数据
-        this.loadFromLocal(callback);
+        const isNetworkError = err && (err.errCode === -1 || /network|timeout|fail/i.test(String(err.errMsg || err.message)));
+        // 云开发失败，尝试本地缓存或兜底数据
+        this.tryOfflineFallback(callback, isNetworkError ? 'network' : 'error');
       });
   },
 
-  // 从本地加载数据（备用）
-  loadFromLocal(callback) {
+  // 将专辑列表写入本地缓存
+  saveAlbumCache(albums) {
+    try {
+      wx.setStorageSync(ALBUM_CACHE_KEY, {
+        albums,
+        timestamp: Date.now()
+      });
+    } catch (err) {
+      console.error('[Home] Failed to save album cache:', err);
+    }
+  },
+
+  // 读取本地缓存
+  loadFromCache() {
+    try {
+      const cache = wx.getStorageSync(ALBUM_CACHE_KEY);
+      if (cache && cache.albums && cache.albums.length > 0) {
+        return cache.albums;
+      }
+    } catch (err) {
+      console.error('[Home] Failed to load album cache:', err);
+    }
+    return null;
+  },
+
+  // 尝试离线兜底：本地缓存 → 内置数据
+  tryOfflineFallback(callback, fallbackErrorType) {
+    const cachedAlbums = this.loadFromCache();
+    if (cachedAlbums) {
+      this.renderAlbums(cachedAlbums, true);
+      if (callback) callback();
+      return;
+    }
+
+    // 没有缓存，使用代码内置兜底数据
     try {
       const localData = require('../../data/albums.js');
       const albums = localData.albums || [];
-      this.shflCore = createShflCore().init(albums);
-
-      const recentGuides = this.shflCore.getPool().slice(0, 5).map(album => ({
-        id: album._id,
-        title: album.title,
-        artist: album.artist,
-        image: album.coverUrl
-      }));
-
-      this.setData({
-        recentGuides,
-        isLoading: false
-      });
-      if (callback) callback();
+      if (albums.length > 0) {
+        this.renderAlbums(albums, true);
+        if (callback) callback();
+        return;
+      }
     } catch (err) {
-      console.error('[Home] Failed to load albums:', err);
-      this.setData({ isLoading: false });
-      if (callback) callback();
+      console.error('[Home] Failed to load built-in albums:', err);
     }
+
+    // 所有来源都失败，展示错误状态
+    this.setData({
+      isLoading: false,
+      loadError: true,
+      errorType: fallbackErrorType === 'network' ? 'network' : 'fatal',
+      offlineMode: false,
+      recentGuides: []
+    });
+    if (callback) callback();
+  },
+
+  // 统一渲染专辑列表
+  renderAlbums(albums, isOffline) {
+    this.shflCore = createShflCore().init(albums);
+    const recentGuides = this.shflCore.getPool().slice(0, isOffline ? albums.length : undefined).map(album => ({
+      id: album._id,
+      title: album.title,
+      artist: album.artist,
+      image: album.coverUrl
+    }));
+
+    this.setData({
+      recentGuides,
+      isLoading: false,
+      loadError: false,
+      offlineMode: isOffline
+    });
   },
 
   onShow() {

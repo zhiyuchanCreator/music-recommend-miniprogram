@@ -1,0 +1,38 @@
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F9FA;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+.error-actions {
+  margin-top: 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-btn {
+  min-width: 240rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  background: transparent;
+  color: #4A9B8C;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 36rpx;
+  border: 2rpx solid #4A9B8C;
+  padding: 0 40rpx;
+}
+
+.error-btn::after {
+  border: none;
+}
+
+.error-btn:active {
+  opacity: 0.8;
+}

@@ -1,7 +1,12 @@
 <!-- 骨架屏 -->
 <skeleton type="home" loading="{{isLoading}}"></skeleton>
 
-<view class="container page-enter">
+<!-- 离线模式弱提示 -->
+<view class="offline-tip {{offlineMode ? 'show' : ''}}">
+  <text class="offline-tip-text">当前网络不太稳，已为你加载本地推荐</text>
+</view>
+
+<view class="container page-enter" wx:if="{{!loadError}}">
   <!-- 侧边栏 -->
   <sidebar show="{{showSidebar}}" bind:close="onSidebarClose"></sidebar>
 
@@ -98,9 +103,17 @@
 
     <!-- 无数据时显示空状态 -->
     <empty-state
-      wx:if="{{!isLoading && recentGuides.length === 0}}"
+      wx:if="{{!isLoading && recentGuides.length === 0 && !offlineMode}}"
       type="empty"
       bind:retry="onRefresh"
     />
   </view>
+</view>
+
+<!-- 加载失败时显示错误状态 -->
+<view class="error-fallback" wx:if="{{loadError}}">
+  <empty-state
+    type="{{errorType}}"
+    bind:retry="onRefresh"
+  />
 </view>

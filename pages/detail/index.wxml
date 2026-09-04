@@ -1,6 +1,13 @@
 <!-- 骨架屏 -->
 <skeleton type="detail" loading="{{loading}}"></skeleton>
 
+<!-- 加载失败临时提示 -->
+<view class="retry-tip" wx:if="{{showRetryTip}}">
+  <text class="retry-tip-icon">🌧️</text>
+  <text class="retry-tip-title">加载有点慢</text>
+  <text class="retry-tip-desc">正在努力连接中，稍等片刻…</text>
+</view>
+
 <view class="container page-enter-slide" wx:if="{{!loading && album}}">
   <!-- 顶部导航栏 - 透明背景 -->
   <view class="header {{showHeaderBg ? 'with-bg' : ''}}">

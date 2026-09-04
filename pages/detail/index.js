@@ -13,7 +13,8 @@ Page({
     isDescExpanded: false, // 简介是否展开
     showExpandBtn: false, // 是否显示展开按钮
     similarAlbums: [], // 相似推荐
-    isShuffling: false // 再 Shfl 一次加载状态
+    isShuffling: false, // 再 Shfl 一次加载状态
+    showRetryTip: false // 加载失败时显示的临时提示
   },
 
   onLoad(options) {
@@ -27,6 +28,10 @@ Page({
       wx.showToast({ title: '参数错误', icon: 'error' });
     }
     this.lastScrollTop = 0;
+  },
+
+  onUnload() {
+    this._isUnloaded = true;
   },
 
   // 页面滚动监听
@@ -75,7 +80,15 @@ Page({
       })
       .catch(err => {
         console.error('加载详情失败:', err);
-        this.setData({ loading: false });
+        this.setData({ loading: false, showRetryTip: true });
+        // 延迟 10 秒再跳转全局错误页，避免连续跳转过于突兀
+        setTimeout(() => {
+          if (this._isUnloaded) return;
+          this.setData({ showRetryTip: false });
+          wx.navigateTo({
+            url: `/pages/error/index?redirect=${encodeURIComponent('/pages/detail/index?id=' + this.data.albumId)}`
+          });
+        }, 10000);
       });
   },
 

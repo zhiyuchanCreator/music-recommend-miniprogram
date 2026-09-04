@@ -77,3 +77,39 @@
   font-size: 26rpx;
   color: #86909C;
 }
+
+/* ========== 加载失败临时提示 ========== */
+.retry-tip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F9FA;
+  padding: 80rpx 60rpx;
+  text-align: center;
+  z-index: 50;
+}
+
+.retry-tip-icon {
+  font-size: 120rpx;
+  margin-bottom: 32rpx;
+  opacity: 0.85;
+}
+
+.retry-tip-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1D2129;
+  margin-bottom: 16rpx;
+}
+
+.retry-tip-desc {
+  font-size: 28rpx;
+  color: #86909C;
+  line-height: 1.5;
+}

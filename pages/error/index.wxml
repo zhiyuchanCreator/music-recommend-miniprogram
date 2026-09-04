@@ -1,0 +1,9 @@
+<view class="error-page">
+  <empty-state
+    type="fatal"
+    bind:retry="onRefresh"
+  />
+  <view class="error-actions">
+    <button class="error-btn secondary" bindtap="onGoHome">返回首页</button>
+  </view>
+</view>

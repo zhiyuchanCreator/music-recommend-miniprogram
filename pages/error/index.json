@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "页面加载失败",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/index"
+  }
+}

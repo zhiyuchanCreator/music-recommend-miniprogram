@@ -398,3 +398,37 @@
   font-size: 26rpx;
   color: #86909C;
 }
+
+/* 离线模式弱提示条 */
+.offline-tip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: #FFF7E6;
+  padding: 16rpx 32rpx;
+  text-align: center;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.offline-tip.show {
+  transform: translateY(0);
+}
+
+.offline-tip-text {
+  font-size: 24rpx;
+  color: #D49A00;
+}
+
+/* 错误兜底容器 */
+.error-fallback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F9FA;
+  padding: 40rpx;
+  box-sizing: border-box;
+}

@@ -2,7 +2,8 @@ Page({
   data: {
     keyword: '',
     results: [],
-    loading: false
+    loading: false,
+    showRetryTip: false
   },
 
   onLoad(options) {
@@ -11,6 +12,10 @@ Page({
       this.setData({ keyword });
       this.search(keyword);
     }
+  },
+
+  onUnload() {
+    this._isUnloaded = true;
   },
 
   search(keyword) {
@@ -49,8 +54,15 @@ Page({
       })
       .catch(err => {
         console.error('[Search] Failed:', err);
-        this.setData({ loading: false });
-        wx.showToast({ title: '搜索失败', icon: 'error' });
+        this.setData({ loading: false, showRetryTip: true });
+        // 延迟 10 秒再跳转全局错误页，避免连续跳转过于突兀
+        setTimeout(() => {
+          if (this._isUnloaded) return;
+          this.setData({ showRetryTip: false });
+          wx.navigateTo({
+            url: `/pages/error/index?redirect=${encodeURIComponent('/pages/search-result/index?keyword=' + encodeURIComponent(keyword))}`
+          });
+        }, 10000);
       });
   },
 

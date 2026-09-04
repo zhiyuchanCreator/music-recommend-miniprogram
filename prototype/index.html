@@ -352,6 +352,59 @@
       font-size: 14px;
     }
 
+    /* ===== 错误/空状态组件预览 ===== */
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      padding: 60px 32px;
+      text-align: center;
+      background: #F8F9FA;
+    }
+    .error-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      opacity: 0.85;
+    }
+    .error-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D2129;
+      margin-bottom: 8px;
+    }
+    .error-desc {
+      font-size: 14px;
+      color: #86909C;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .error-btn {
+      min-width: 140px;
+      padding: 10px 28px;
+      border-radius: 22px;
+      border: none;
+      background: linear-gradient(135deg, #4A9B8C 0%, #3D8B7C 100%);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .error-btn.secondary {
+      background: transparent;
+      color: #4A9B8C;
+      border: 1px solid #4A9B8C;
+      margin-top: 12px;
+    }
+    .offline-tip {
+      background: #FFF7E6;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #D49A00;
+    }
+
     /* ===== 搜索结果页 ===== */
     .result-header {
       display: flex;
@@ -901,6 +954,9 @@
         <div class="nav-item" onclick="showPage('search'); toggleSidebar()">
           <span>🔍</span><span>Search</span>
         </div>
+        <div class="nav-item" onclick="showPage('error-preview'); toggleSidebar()">
+          <span>🌧️</span><span>Error States</span>
+        </div>
         <div class="signin-section">
           <div class="signin-title">Sign in to Shfl</div>
           <div class="signin-desc">Sign in to save albums, filter settings, and recommenders.</div>
@@ -1176,6 +1232,19 @@
       <div style="height: 80px;"></div>
     </section>
 
+    <!-- ===== 错误状态预览页 ===== -->
+    <section id="error-preview" class="page">
+      <div class="offline-tip">
+        当前网络不太稳，已为你加载本地推荐
+      </div>
+      <div class="error-state">
+        <div class="error-icon">🌧️</div>
+        <div class="error-title">网络开小差了</div>
+        <div class="error-desc">检查一下网络，我们马上回来</div>
+        <button class="error-btn">重新加载</button>
+      </div>
+    </section>
+
     <!-- ===== TabBar ===== -->
     <div id="tabbar" class="tabbar active">
       <div class="tab-item active" onclick="switchTab(0)">首页</div>
@@ -1193,6 +1262,7 @@
       } else {
         tabbar.classList.remove('active');
       }
+      // error-preview 不需要返回按钮式的导航，保持简洁
       document.querySelectorAll('.tab-item').forEach((el, i) => {
         el.classList.toggle('active', (id === 'home' && i === 0) || (id === 'my' && i === 1));
       });

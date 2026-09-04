@@ -7,6 +7,13 @@
   </view>
   
   <view wx:if="{{loading}}" class="loading">搜索中...</view>
+
+  <!-- 加载失败临时提示 -->
+  <view class="retry-tip" wx:if="{{showRetryTip}}">
+    <text class="retry-tip-icon">🌧️</text>
+    <text class="retry-tip-title">加载有点慢</text>
+    <text class="retry-tip-desc">正在努力连接中，稍等片刻…</text>
+  </view>
   
   <view wx:elif="{{results.length > 0}}" class="result-list">
     <view class="result-item" wx:for="{{results}}" wx:key="id" bindtap="onAlbumTap" data-id="{{item.id}}">
