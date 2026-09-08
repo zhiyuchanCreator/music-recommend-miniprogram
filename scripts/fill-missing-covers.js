@@ -1,16 +1,22 @@
 /**
- * 用 Wikipedia 封面 URL 补充缺失的专辑封面
+ * 用 Wikipedia 封面 URL 补充 iTunes 未匹配到的专辑封面
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// 缺失专辑的 Wikipedia 封面 URL
+// 缺失专辑的 Wikipedia 封面 URL（按 _id 映射）
 const fallbackCovers = {
-  'album_014': 'https://upload.wikimedia.org/wikipedia/en/b/b7/NirvanaNevermindalbumcover.jpg',
-  'album_030': 'https://upload.wikimedia.org/wikipedia/en/7/73/PublicEnemyItTakesaNationofMillionstoHoldUsBack.jpg',
-  'album_039': 'https://upload.wikimedia.org/wikipedia/en/a/af/Slint_-_Spiderland_album_cover.png',
-  'album_041': 'https://upload.wikimedia.org/wikipedia/en/4/42/ATribeCalledQuestTheLowEndtheory.jpg'
+  'album_5pcgy8': 'https://upload.wikimedia.org/wikipedia/en/7/73/PublicEnemyItTakesaNationofMillionstoHoldUsBack.jpg',
+  'album_2okbtk': 'https://upload.wikimedia.org/wikipedia/en/0/09/The_Strokes_-_Is_This_It.png',
+  'album_zhx7zy': 'https://upload.wikimedia.org/wikipedia/en/4/42/ATribeCalledQuestTheLowEndtheory.jpg',
+  'album_7yaav5': 'https://upload.wikimedia.org/wikipedia/en/8/86/ExileMainSt.jpg',
+  'album_yj8r78': 'https://upload.wikimedia.org/wikipedia/en/9/9f/Prince1999.jpg',
+  'album_qo0bcp': 'https://upload.wikimedia.org/wikipedia/en/5/57/Godspeed_You_Black_Emperor_-_Lift_Your_Skinny_Fists_Like_Antennas_to_Heaven.jpg',
+  'album_4mod7a': 'https://upload.wikimedia.org/wikipedia/en/b/b6/LCD_Soundsystem_-_This_Is_Happening.jpg',
+  'album_qj693t': 'https://upload.wikimedia.org/wikipedia/en/a/a0/Blonde_-_Frank_Ocean.jpeg',
+  'album_9b7qlm': 'https://upload.wikimedia.org/wikipedia/en/8/86/Kate_Bush_-_Hounds_of_Love.png',
+  'album_7dnzyn': 'https://upload.wikimedia.org/wikipedia/en/6/6f/Sufjan_Stevens_-_Age_of_Adz.jpg'
 };
 
 function updateImportDataFile(albums) {
@@ -34,15 +40,7 @@ function updateAlbumsJsFile(albums) {
   const filePath = path.join(__dirname, '..', 'data', 'albums.js');
 
   const albumsString = albums.map(album => {
-    const entries = Object.entries(album)
-      .map(([key, value]) => {
-        if (typeof value === 'string') {
-          return `${key}:"${value.replace(/"/g, '\\"')}"`;
-        }
-        return `${key}:${value}`;
-      })
-      .join(',');
-    return `  {${entries}}`;
+    return '  ' + JSON.stringify(album);
   }).join(',\n');
 
   const content = `/**\n * 本地专辑数据\n * 如果没有云开发环境，可以直接使用这个文件\n */\n\nconst albums = [\n${albumsString}\n];\n\nmodule.exports = {\n  albums\n};\n`;
@@ -63,8 +61,8 @@ function main() {
     if (fallbackUrl) {
       album.coverUrl = fallbackUrl;
       filled++;
-      console.log(`✅ ${album.title} - ${album.artist}`);
-      console.log(`   ${fallbackUrl}`);
+      console.log(`${album.title} - ${album.artist}`);
+      console.log(`  ${fallbackUrl}`);
     }
   });
 

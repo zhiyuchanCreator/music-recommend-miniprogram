@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shfl Album Schema v1",
+  "description": "AI Music Discovery 小程序专辑数据标准结构",
+  "type": "object",
+  "required": ["_id", "title", "artist"],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "description": "唯一标识，格式 album_<hash>"
+    },
+    "title": {
+      "type": "string",
+      "description": "专辑名称"
+    },
+    "artist": {
+      "type": "string",
+      "description": "艺术家名称"
+    },
+    "year": {
+      "type": ["number", "null"],
+      "description": "发行年份"
+    },
+    "genre": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "风格标签数组，第一项为主风格"
+    },
+    "rating": {
+      "type": ["number", "null"],
+      "description": "综合评分，0-100"
+    },
+    "source": {
+      "type": "string",
+      "description": "数据来源，如 RYM / Pitchfork / Metacritic / iTunes"
+    },
+    "sourceUrl": {
+      "type": "string",
+      "description": "数据来源链接"
+    },
+    "coverUrl": {
+      "type": "string",
+      "description": "专辑封面图片 URL，优先使用 is1-ssl.mzstatic.com 或 upload.wikimedia.org"
+    },
+    "description": {
+      "type": "string",
+      "description": "专辑简介，用于 RAG 上下文和推荐解释"
+    },
+    "tracks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "曲目名称列表"
+    },
+    "label": {
+      "type": ["string", "null"],
+      "description": "唱片公司"
+    },
+    "producer": {
+      "type": ["string", "null"],
+      "description": "制作人"
+    },
+    "duration": {
+      "type": ["string", "null"],
+      "description": "总时长"
+    },
+    "mood": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "情绪标签，如 melancholic / energetic / dreamy"
+    },
+    "energy": {
+      "type": ["number", "null"],
+      "description": "能量值，0-100，用于相似检索"
+    },
+    "bpm": {
+      "type": ["number", "null"],
+      "description": "平均 BPM"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "额外标签，如 female vocalist / guitar-driven / lo-fi"
+    },
+    "culturalContext": {
+      "type": ["string", "null"],
+      "description": "文化背景/时代意义，用于 RAG 增强"
+    },
+    "embedding": {
+      "type": ["array", "null"],
+      "items": { "type": "number" },
+      "description": "文本/流派 Embedding，用于相似检索"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "数据管线元信息",
+      "properties": {
+        "crawledAt": { "type": "string" },
+        "cleanedAt": { "type": "string" },
+        "importBatch": { "type": "string" }
+      }
+    },
+    "createTime": {
+      "type": "string",
+      "description": "云数据库创建时间，由服务端生成"
+    },
+    "updateTime": {
+      "type": "string",
+      "description": "云数据库更新时间，由服务端生成"
+    }
+  }
+}

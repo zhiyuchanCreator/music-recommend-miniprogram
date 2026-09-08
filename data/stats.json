@@ -1,0 +1,12 @@
+{
+  "total": 100,
+  "normalized": 100,
+  "unique": 100,
+  "valid": 100,
+  "invalid": 0,
+  "bySource": {
+    "RYM": 42,
+    "Pitchfork": 28,
+    "Metacritic": 30
+  }
+}

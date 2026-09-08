@@ -1,6 +1,6 @@
 /**
- * 使用 iTunes API 获取真实专辑封面
- * 策略：按 artist 搜索该艺术家的所有专辑，再按 title 匹配
+ * 使用 iTunes API 获取真实专辑封面与曲目
+ * 策略：按 artist 搜索该艺术家的所有专辑，再按 title 匹配，然后 lookup 曲目
  */
 
 const https = require('https');
@@ -67,6 +67,24 @@ function getHighResCover(url100) {
   return url100.replace(/\/\d+x\d+bb\.jpg$/, '/1000x1000bb.jpg');
 }
 
+// 根据 collectionId 获取曲目列表
+async function fetchTracks(collectionId) {
+  const url = `https://itunes.apple.com/lookup?id=${collectionId}&entity=song&limit=200`;
+  const response = await httpGet(url);
+
+  if (response.status !== 200) {
+    throw new Error(`iTunes 曲目请求失败，状态码 ${response.status}`);
+  }
+
+  const json = JSON.parse(response.data);
+  const tracks = (json.results || [])
+    .filter(item => item.wrapperType === 'track' && item.trackName)
+    .sort((a, b) => a.trackNumber - b.trackNumber)
+    .map(item => item.trackName);
+
+  return tracks;
+}
+
 // 同步更新 cloudfunctions/importData/index.js 中的 albums 数组
 function updateImportDataFile(albums) {
   const filePath = path.join(__dirname, '..', 'cloudfunctions', 'importData', 'index.js');
@@ -89,16 +107,9 @@ function updateImportDataFile(albums) {
 function updateAlbumsJsFile(albums) {
   const filePath = path.join(__dirname, '..', 'data', 'albums.js');
 
+  // 使用 JSON.stringify 保证数组、字符串、数字格式正确
   const albumsString = albums.map(album => {
-    const entries = Object.entries(album)
-      .map(([key, value]) => {
-        if (typeof value === 'string') {
-          return `${key}:"${value.replace(/"/g, '\\"')}"`;
-        }
-        return `${key}:${value}`;
-      })
-      .join(',');
-    return `  {${entries}}`;
+    return '  ' + JSON.stringify(album);
   }).join(',\n');
 
   const content = `/**\n * 本地专辑数据\n * 如果没有云开发环境，可以直接使用这个文件\n */\n\nconst albums = [\n${albumsString}\n];\n\nmodule.exports = {\n  albums\n};\n`;
@@ -123,9 +134,9 @@ async function main() {
 
     try {
       if (!artistCache[album.artist]) {
-        console.log(`  🔍 首次搜索艺术家: ${album.artist}`);
+        console.log(`  首次搜索艺术家: ${album.artist}`);
         artistCache[album.artist] = await searchAlbumsByArtist(album.artist);
-        console.log(`  📦 找到 ${artistCache[album.artist].length} 张专辑`);
+        console.log(`  找到 ${artistCache[album.artist].length} 张专辑`);
       }
 
       const match = matchAlbum(artistCache[album.artist], album.title);
@@ -133,14 +144,27 @@ async function main() {
       if (match && match.artworkUrl100) {
         const coverUrl = getHighResCover(match.artworkUrl100);
         album.coverUrl = coverUrl;
-        console.log(`  ✅ 已获取封面: ${coverUrl}`);
+        console.log(`  已获取封面: ${coverUrl}`);
+
+        // 如果已有曲目数据且不为空，则保留；否则尝试从 iTunes 拉取
+        if (!album.tracks || album.tracks.length === 0) {
+          try {
+            const tracks = await fetchTracks(match.collectionId);
+            if (tracks.length > 0) {
+              album.tracks = tracks;
+              console.log(`  已获取 ${tracks.length} 首曲目`);
+            }
+          } catch (trackErr) {
+            console.log(`  曲目获取失败: ${trackErr.message}`);
+          }
+        }
       } else {
         missing.push({ _id: album._id, title: album.title, artist: album.artist, reason: '未匹配到专辑' });
-        console.log(`  ⚠️ 未匹配到专辑`);
+        console.log(`  未匹配到专辑`);
       }
     } catch (err) {
       missing.push({ _id: album._id, title: album.title, artist: album.artist, reason: err.message });
-      console.log(`  ❌ 出错: ${err.message}`);
+      console.log(`  出错: ${err.message}`);
     }
 
     if (i < albums.length - 1) {

@@ -51,6 +51,28 @@ function generateId(album) {
   return `album_${Math.abs(hash).toString(36)}`;
 }
 
+// 把风格统一为数组
+function normalizeGenre(genre) {
+  if (Array.isArray(genre)) {
+    return genre.map(g => g.trim()).filter(Boolean);
+  }
+  if (typeof genre === 'string') {
+    return genre.split(/[,|/]/).map(g => g.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+// 把曲目统一为数组
+function normalizeTracks(tracks) {
+  if (Array.isArray(tracks)) {
+    return tracks.map(t => t.trim()).filter(Boolean);
+  }
+  if (typeof tracks === 'string') {
+    return tracks.split(/[|]/).map(t => t.trim()).filter(Boolean);
+  }
+  return [];
+}
+
 // 标准化专辑数据
 function normalizeAlbum(rawAlbum) {
   const title = cleanTitle(rawAlbum.title);
@@ -60,20 +82,28 @@ function normalizeAlbum(rawAlbum) {
     _id: generateId({ artist, title }),
     title: title,
     artist: artist,
-    // 可选字段
     year: rawAlbum.year || null,
-    genre: rawAlbum.genre || [],
-    rating: rawAlbum.rating || null,
-    // 来源信息
+    genre: normalizeGenre(rawAlbum.genre),
+    rating: typeof rawAlbum.rating === 'number' ? rawAlbum.rating : null,
     source: rawAlbum.source || 'Unknown',
     sourceUrl: rawAlbum.sourceUrl || '',
-    // 元数据
-    crawledAt: rawAlbum.crawledAt || new Date().toISOString(),
-    cleanedAt: new Date().toISOString(),
-    // 小程序用字段
     coverUrl: rawAlbum.coverUrl || '',
     description: rawAlbum.description || '',
-    recommenders: rawAlbum.recommenders || []
+    tracks: normalizeTracks(rawAlbum.tracks),
+    label: rawAlbum.label || null,
+    producer: rawAlbum.producer || null,
+    duration: rawAlbum.duration || null,
+    mood: normalizeGenre(rawAlbum.mood),
+    energy: typeof rawAlbum.energy === 'number' ? rawAlbum.energy : null,
+    bpm: typeof rawAlbum.bpm === 'number' ? rawAlbum.bpm : null,
+    tags: normalizeGenre(rawAlbum.tags),
+    culturalContext: rawAlbum.culturalContext || null,
+    embedding: Array.isArray(rawAlbum.embedding) ? rawAlbum.embedding : null,
+    metadata: {
+      crawledAt: rawAlbum.crawledAt || new Date().toISOString(),
+      cleanedAt: new Date().toISOString(),
+      importBatch: rawAlbum.importBatch || 'p0'
+    }
   };
 }
 
