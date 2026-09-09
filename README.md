@@ -150,7 +150,7 @@ flowchart LR
 ├── spider/                               # 数据采集（Scrapy 爬虫）
 ├── prototype/                            # 可点击 HTML 原型
 ├── docs/                                 # 文档
-│   ├── QUICKSTART.md                     # 快速开始指南
+│   └── QUICKSTART.md                     # 快速开始指南
 ├── 小程序原型设计.md                      # 产品原型设计文档
 └── project.config.json                   # 微信开发者工具配置
 ```
@@ -161,7 +161,9 @@ flowchart LR
 
 1. 用[微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)打开本项目根目录
 2. 在 `project.config.json` 中填入你自己的 AppID（或选择「测试号」）
-3. 如需使用云函数，开通云开发后，在各云函数目录执行：
+3. 如需使用云函数，开通云开发后：
+   - 复制 `env.example.js` 为 `env.config.js`，填入你的云开发环境 ID（该文件已被 gitignore，不会提交）
+   - 在各云函数目录执行：
    ```bash
    npm install
    ```

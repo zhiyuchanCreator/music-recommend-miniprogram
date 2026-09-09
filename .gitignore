@@ -29,3 +29,7 @@ Thumbs.db
 
 # ===== 本地工作记忆 =====
 .workbuddy/
+
+# ===== 本地私有配置（含真实 AppID / 云环境 ID / 个人求职笔记）=====
+env.config.js
+private/

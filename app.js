@@ -4,8 +4,16 @@ App({
     if (!wx.cloud) {
       console.error('[App] 请使用 2.2.3 或以上的基础库以使用云能力');
     } else {
+      // 云环境 ID：复制 env.example.js 为 env.config.js 并填入自己的环境 ID；
+      // 未创建 env.config.js 时使用帐号默认环境
+      let CLOUD_ENV_ID;
+      try {
+        CLOUD_ENV_ID = require('./env.config.js').env;
+      } catch (e) {
+        CLOUD_ENV_ID = undefined;
+      }
       wx.cloud.init({
-        env: 'YOUR_CLOUD_ENV_ID',
+        env: CLOUD_ENV_ID,
         traceUser: true
       });
     }
