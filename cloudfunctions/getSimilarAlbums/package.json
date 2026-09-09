@@ -1,0 +1,9 @@
+{
+  "name": "getSimilarAlbums",
+  "version": "1.0.0",
+  "description": "基于 Embedding 余弦相似度的相似专辑检索",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

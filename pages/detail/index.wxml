@@ -155,6 +155,7 @@
           <image class="similar-cover" src="{{item.coverUrl}}" mode="aspectFill" lazy-load="true"/>
           <text class="similar-title">{{item.title}}</text>
           <text class="similar-artist">{{item.artist}}</text>
+          <text class="similar-reason" wx:if="{{item.reason}}">{{item.reason}}</text>
         </view>
       </view>
     </scroll-view>

@@ -23,14 +23,21 @@
 
 ### 第二步：部署云函数
 1. 在开发者工具中进入 `cloudfunctions/` 下各函数目录
-2. 右键选择「上传并部署：云端安装依赖」（至少部署 `getAlbums` 和 `importData`）
+2. 右键选择「上传并部署：云端安装依赖」，至少部署：
+   - `getAlbums`（专辑列表）
+   - `importData`（数据导入）
+   - `getSimilarAlbums`（Embedding 相似推荐，P2）
+   - `recordInteraction` / `getUserTaste`（用户 Memory，P2）
 
 ### 第三步：导入数据
 1. 部署 `cloudfunctions/importData`
 2. 云开发控制台 → 云函数 → `importData` → 测试
-3. 先传 `{ "clear": true }` 清空旧数据，再传 `{}` 导入 100 张专辑
+3. 先传 `{ "clear": true }` 清空旧数据，再传 `{}` 导入 100 张专辑（含 Embedding 向量）
 
-### 第四步：确认数据库权限
+### 第四步：创建 interactions 集合
+云开发控制台 → 数据库 → 新建集合 `interactions`，权限设置为「仅创建者可读写」（用户行为数据，云端自动写入）。
+
+### 第五步：确认数据库权限
 云开发控制台 → 数据库 → `albums` 集合 → 权限设置为「所有用户可读，仅创建者可写」
 
 ---

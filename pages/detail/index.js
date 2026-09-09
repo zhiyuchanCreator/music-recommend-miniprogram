@@ -77,6 +77,9 @@ Page({
 
         // 加载相似推荐
         this.loadSimilarAlbums(album);
+
+        // 用户 Memory：上报浏览行为
+        this.recordInteraction('view');
       })
       .catch(err => {
         console.error('加载详情失败:', err);
@@ -108,8 +111,30 @@ Page({
     });
   },
 
-  // 加载相似推荐
+  // 加载相似推荐：优先用 Embedding 相似检索（getSimilarAlbums 云函数），
+  // 失败时回退到本地 genre 重叠逻辑
   loadSimilarAlbums(currentAlbum) {
+    wx.cloud.callFunction({
+      name: 'getSimilarAlbums',
+      data: { albumId: currentAlbum._id, topK: 6 }
+    })
+      .then(res => {
+        const result = res.result;
+        if (result && result.success && Array.isArray(result.similar) && result.similar.length > 0) {
+          this.setData({ similarAlbums: result.similar });
+          return;
+        }
+        // 云函数无结果，回退本地逻辑
+        this.loadSimilarAlbumsLocal(currentAlbum);
+      })
+      .catch(err => {
+        console.error('[Detail] Embedding 相似检索失败，回退本地逻辑:', err);
+        this.loadSimilarAlbumsLocal(currentAlbum);
+      });
+  },
+
+  // 本地兜底：按 genre 层级重叠计算相似专辑
+  loadSimilarAlbumsLocal(currentAlbum) {
     const db = wx.cloud.database();
     const rawGenre = currentAlbum.genre || '';
     const genres = Array.isArray(rawGenre)
@@ -126,7 +151,8 @@ Page({
               id: item._id,
               title: item.title,
               artist: item.artist,
-              coverUrl: item.coverUrl
+              coverUrl: item.coverUrl,
+              reason: ''
             }));
           this.setData({ similarAlbums: similar });
         })
@@ -189,7 +215,8 @@ Page({
           id: item._id,
           title: item.title,
           artist: item.artist,
-          coverUrl: item.coverUrl
+          coverUrl: item.coverUrl,
+          reason: ''
         }));
 
         this.setData({ similarAlbums: similar });
@@ -197,6 +224,20 @@ Page({
       .catch(err => {
         console.error('加载相似推荐失败:', err);
       });
+  },
+
+  // 用户 Memory：上报行为（静默失败，不阻塞主流程）
+  recordInteraction(action, context) {
+    wx.cloud.callFunction({
+      name: 'recordInteraction',
+      data: {
+        albumId: this.data.albumId,
+        action,
+        context: context || { from: 'detail' }
+      }
+    }).catch(err => {
+      console.warn('[Detail] 行为上报失败（不影响使用）:', err);
+    });
   },
 
   // 检查收藏状态
@@ -239,6 +280,7 @@ Page({
       // 取消收藏
       favorites = favorites.filter(item => item.id !== albumId);
       wx.showToast({ title: '已取消收藏', icon: 'success' });
+      this.recordInteraction('unfavorite');
     } else {
       // 添加收藏
       favorites.push({
@@ -249,6 +291,7 @@ Page({
         timestamp: Date.now()
       });
       wx.showToast({ title: '收藏成功', icon: 'success' });
+      this.recordInteraction('favorite');
     }
 
     wx.setStorageSync('favorites', favorites);

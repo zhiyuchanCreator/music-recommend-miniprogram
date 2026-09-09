@@ -1,0 +1,9 @@
+{
+  "name": "getUserTaste",
+  "version": "1.0.0",
+  "description": "聚合用户行为数据，生成品味画像（风格 / 年代偏好）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

@@ -75,6 +75,28 @@
     </button>
   </view>
 
+  <!-- 为你推荐区（基于用户 Memory 的个性化推荐） -->
+  <view class="foryou-section" wx:if="{{forYouAlbums.length > 0}}">
+    <view class="section-title-wrapper">
+      <view class="title-line"></view>
+      <text class="section-title">for you</text>
+      <view class="title-line"></view>
+    </view>
+    <view class="foryou-hint">
+      <text>基于你的收藏与浏览历史生成</text>
+    </view>
+    <view class="foryou-list">
+      <view class="foryou-item list-item-{{index % 10}}" wx:for="{{forYouAlbums}}" wx:key="id" bindtap="onAlbumTap" data-id="{{item.id}}">
+        <image class="foryou-image" src="{{item.image}}" mode="aspectFill" lazy-load="true"/>
+        <view class="foryou-info">
+          <text class="foryou-title">{{item.title}}</text>
+          <text class="foryou-artist">{{item.artist}}</text>
+          <text class="foryou-reason">{{item.reason}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- 最近推荐区 -->
   <view class="recent-section">
     <view class="section-title-wrapper">

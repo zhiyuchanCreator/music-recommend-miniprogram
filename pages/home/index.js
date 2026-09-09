@@ -1,6 +1,7 @@
 const SEARCH_HISTORY_KEY = 'search_history';
 const ALBUM_CACHE_KEY = 'album_cache';
 const { create: createShflCore } = require('../../utils/shfl-core.js');
+const { recommendForYou } = require('../../utils/taste.js');
 
 Page({
   data: {
@@ -20,7 +21,8 @@ Page({
       'international', 'african', 'latin', 'folk',
       'country', 'blues', 'avant-garde'
     ],
-    recentGuides: []
+    recentGuides: [],
+    forYouAlbums: [] // 为你推荐（基于用户 Memory）
   },
 
   onLoad() {
@@ -206,6 +208,7 @@ Page({
             loadError: false,
             offlineMode: false
           });
+          this.refreshForYou();
           if (callback) callback();
           return;
         }
@@ -295,11 +298,43 @@ Page({
       loadError: false,
       offlineMode: isOffline
     });
+    this.refreshForYou();
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
+    }
+    // 从详情页返回时收藏/历史可能已变化，重新计算「为你推荐」
+    this.refreshForYou();
+  },
+
+  // 基于 User Memory（本地收藏 + 浏览历史 + Embedding）计算个性化推荐
+  refreshForYou() {
+    const albums = this.shflCore ? this.shflCore.getPool() : [];
+    if (albums.length === 0) {
+      return;
+    }
+
+    try {
+      // 排除已收藏和已浏览过的专辑，让推荐真正带来「新」专辑
+      const favoriteIds = (wx.getStorageSync('favorites') || []).map(item => item.id);
+      const historyIds = (wx.getStorageSync('history') || []).map(item => item.id);
+      const recommended = recommendForYou(albums, {
+        topN: 5,
+        excludeIds: [...favoriteIds, ...historyIds]
+      });
+      this.setData({
+        forYouAlbums: recommended.map(item => ({
+          id: item.id,
+          title: item.title,
+          artist: item.artist,
+          image: item.coverUrl,
+          reason: item.reason
+        }))
+      });
+    } catch (err) {
+      console.error('[Home] Failed to compute for-you recommendations:', err);
     }
   },
 

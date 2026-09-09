@@ -1,0 +1,9 @@
+{
+  "name": "recordInteraction",
+  "version": "1.0.0",
+  "description": "记录用户行为（浏览/收藏/取消收藏/跳过），构建用户 Memory",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

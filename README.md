@@ -27,10 +27,12 @@
 ## 功能特性
 
 - **首页推荐**：每日专辑流 + 随机推荐，支持下拉刷新
+- **为你推荐**：基于用户 Memory（收藏/浏览历史）与 Embedding 品味向量的个性化推荐，附「为什么推荐」解释
 - **风格/情绪探索**：多维度标签筛选，帮助用户拓展听歌边界
 - **专辑详情**：封面、曲目、简介、评分、来源平台一键跳转
-- **AI 探索（P2）**：自然语言提问，RAG 返回带解释的专辑推荐
-- **用户 Memory（P2）**：记录浏览/收藏/跳过，生成个人 Taste Profile
+- **相似推荐**：基于 Embedding 余弦相似度检索相似专辑，展示共享流派/年代的推荐理由
+- **AI 探索（P2 进行中）**：自然语言提问，RAG 返回带解释的专辑推荐
+- **用户 Memory**：`recordInteraction` 云函数记录浏览/收藏行为，`getUserTaste` 聚合生成品味画像（风格/年代偏好）
 - **离线兜底**：网络异常时自动切换本地缓存或内置数据，避免白屏
 - **全局异常页**：未捕获错误自动跳转兜底页
 
@@ -66,11 +68,20 @@ graph TD
     B --> E[clearAlbums]
     B --> F[removeDuplicates]
     B --> G[updateGenre]
+    B --> S[getSimilarAlbums<br/>Embedding 余弦相似度]
+    B --> R[recordInteraction<br/>用户行为记录]
+    B --> T[getUserTaste<br/>品味画像聚合]
     C --> H[(Cloud DB: albums)]
     D --> H
-    A --> I[本地缓存 / data/albums.js 兜底]
-    J[scripts/ 数据管线] -->|清洗、封面、曲目| K[data/albums.json]
-    K --> D
+    R --> I[(Cloud DB: interactions)]
+    T --> I
+    S --> H
+    A --> J[本地缓存 / data/albums.js 兜底]
+    A --> M[utils/taste.js<br/>本地品味画像 + 为你推荐]
+    M --> J
+    J -->|embedding 字段| M
+    K[scripts/compute-embeddings.js] -->|生成 76 维特征向量| L[data/albums.json]
+    L --> D
 ```
 
 ---
@@ -119,6 +130,24 @@ flowchart LR
 
 当前数据集：**100 张真实专辑**，`genre` 已数组化，封面来自 iTunes / Wikipedia，曲目来自 iTunes 或人工补充。
 
+### Embedding（genre-feature-v1）
+
+专辑相似检索与个性化推荐的基础向量模型，纯本地特征工程、无外部 API 依赖：
+
+- **特征空间（76 维）**：流派（主流派权重 1.0 / 次流派 0.7）+ mood/tags（0.5）+ 年代桶（0.6）
+- **归一化**：L2 归一化后余弦相似度 = 点积，可在小程序端/云函数端直接计算
+- **词表**：[data/embedding-vocab.json](./data/embedding-vocab.json) 固化维度顺序，保证重算一致
+- **生成脚本**：`node scripts/compute-embeddings.js`（就地更新 albums.json / albums.js / importData）
+- **质量样例**：Kind of Blue → A Love Supreme (0.805)、OK Computer → In Rainbows (0.805)、Illmatic → Ready to Die (1.000)
+
+数据量增长到万级后，可将「内存全量余弦」升级为预计算 top-K 或外部向量检索服务（见升级路线 P2+）。
+
+### 用户 Memory（interactions 集合）
+
+- **写入**：`recordInteraction` 云函数记录 `view / favorite / unfavorite / skip`，openid 由云端获取，view 10 分钟内去重
+- **读取**：`getUserTaste` 聚合生成品味画像——topGenres / topDecades / topArtists，权重 favorite(3) > view(1) > skip(-1)，30 天半衰期
+- **端侧画像**：[utils/taste.js](./utils/taste.js) 用本地收藏/历史 + Embedding 计算品味向量，离线也可生成「为你推荐」
+
 ---
 
 ## 项目结构
@@ -140,7 +169,10 @@ flowchart LR
 │   ├── importData                        # 导入数据
 │   ├── clearAlbums                       # 清空数据
 │   ├── removeDuplicates                  # 去重
-│   └── updateGenre                       # 更新流派
+│   ├── updateGenre                       # 更新流派
+│   ├── getSimilarAlbums                  # Embedding 相似检索（P2）
+│   ├── recordInteraction                 # 用户行为记录（P2）
+│   └── getUserTaste                      # 品味画像聚合（P2）
 ├── data/                                 # 专辑数据
 │   ├── schema.json                       # Album Schema v1
 │   ├── albums.json                       # 100张清洗后数据
@@ -188,7 +220,7 @@ flowchart LR
 |---|---|---|
 | **P0** | 数据基础 | 100 张真实专辑、Schema v1、可扩展数据管线、改造 importData |
 | **P1** | 基础可展示性 | README、架构图、Demo 素材、仓库整理 |
-| **P2** | AI 能力差异化 | Embedding 相似检索、用户 Memory、RAG Agent、推荐解释 |
+| **P2** | AI 能力差异化 | ✅ Embedding 相似检索、✅ 用户 Memory（行为记录 + 品味画像）、✅ 推荐解释；⏳ RAG Agent |
 | **P3** | 作品包装 | Case Study、Portfolio、项目讲解稿、简历 bullet |
 
 ---
