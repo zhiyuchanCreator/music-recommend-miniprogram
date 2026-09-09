@@ -12355,8 +12355,8 @@ exports.main = async (event, context) => {
       console.log('[导入数据] 现有数据量:', existingCount);
 
       if (existingCount > 0) {
-        // 一次性查询所有现有数据（limit 100，足够覆盖50条）
-        const { data: existingData } = await db.collection('albums').limit(100).get();
+        // 一次性查询所有现有数据（云端单次最多 1000 条，当前百级数据量足够）
+        const { data: existingData } = await db.collection('albums').limit(1000).get();
         const existingMap = new Map();
         existingData.forEach(item => {
           const key = `${item.title}::${item.artist}`;
@@ -12366,7 +12366,7 @@ exports.main = async (event, context) => {
         let updated = 0;
         let added = 0;
 
-        await batchProcess(albums, 10, async (album) => {
+        await batchProcess(albums, 20, async (album) => {
           const key = `${album.title}::${album.artist}`;
           const existingId = existingMap.get(key);
 
@@ -12398,7 +12398,7 @@ exports.main = async (event, context) => {
 
     // 数据为空或清空后：分批导入所有数据
     let imported = 0;
-    await batchProcess(albums, 10, async (album) => {
+    await batchProcess(albums, 20, async (album) => {
       await db.collection('albums').add({
         data: { ...album, createTime: db.serverDate() }
       });
