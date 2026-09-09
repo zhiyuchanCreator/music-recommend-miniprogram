@@ -215,6 +215,12 @@ flowchart LR
 
 ---
 
+## 作品包装
+
+- **[Case Study](./docs/CASE-STUDY.md)**：问题 → 判断 → 方案 → 4 个真实难点（含取舍与事故复盘）→ 可验证结果 → 方法论沉淀
+
+> 项目讲解稿、简历素材等求职准备文档为私人笔记，不在公开仓库中。
+
 ## 升级路线
 
 | 阶段 | 目标 | 关键交付 |
@@ -222,7 +228,7 @@ flowchart LR
 | **P0** | 数据基础 | 100 张真实专辑、Schema v1、可扩展数据管线、改造 importData |
 | **P1** | 基础可展示性 | README、架构图、Demo 素材、仓库整理 |
 | **P2** | AI 能力差异化 | ✅ Embedding 相似检索、✅ 用户 Memory（行为记录 + 品味画像）、✅ 推荐解释、✅ RAG Agent（ragChat + AI 探索页） |
-| **P3** | 作品包装 | Case Study、Portfolio、项目讲解稿、简历 bullet |
+| **P3** | 作品包装 | Case Study、架构图、项目复盘、推荐质量验证 |
 
 ---
 
