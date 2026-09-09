@@ -38,9 +38,17 @@
 
 ## Demo
 
-> 待补充：首页推荐流、风格筛选、专辑详情、AI 探索对话的 GIF/视频 Demo。
-> 
-> 建议录制场景：
+| 首页 · 风格探索 | 专辑详情 |
+|---|---|
+| ![首页](./assets/screenshots/home.png) | ![详情页](./assets/screenshots/detail.png) |
+
+| 搜索结果 | 我的 · 收藏与历史 |
+|---|---|
+| ![搜索结果](./assets/screenshots/search-result.png) | ![我的页](./assets/screenshots/my.png) |
+
+> 截图来自 [prototype/index.html](./prototype/index.html) 可点击原型，实际小程序界面与之保持一致。
+>
+> GIF / 视频 Demo 建议录制场景：
 > 1. 首页下拉刷新，展示 100 张专辑流
 > 2. 点击风格标签筛选（如 jazz / hip hop / post-rock）
 > 3. 随机推荐进入专辑详情，查看曲目和平台跳转
@@ -141,6 +149,8 @@ flowchart LR
 ├── scripts/                              # 数据清洗/导入/封面补充脚本
 ├── spider/                               # 数据采集（Scrapy 爬虫）
 ├── prototype/                            # 可点击 HTML 原型
+├── docs/                                 # 文档
+│   ├── QUICKSTART.md                     # 快速开始指南
 ├── 小程序原型设计.md                      # 产品原型设计文档
 └── project.config.json                   # 微信开发者工具配置
 ```
