@@ -1,5 +1,5 @@
 {
-  "pages": ["pages/home/index", "pages/search/index", "pages/search-result/index", "pages/detail/index", "pages/my/index", "pages/error/index"],
+  "pages": ["pages/home/index", "pages/search/index", "pages/search-result/index", "pages/detail/index", "pages/my/index", "pages/ai-chat/index", "pages/error/index"],
   "usingComponents": {},
   "window": {
     "backgroundTextStyle": "light",

@@ -1,0 +1,63 @@
+<view class="chat-page">
+  <!-- 消息列表 -->
+  <scroll-view class="chat-list" scroll-y="true" scroll-into-view="{{scrollIntoId}}" scroll-with-animation="true">
+    <!-- 欢迎语 -->
+    <view class="msg-row assistant" wx:if="{{messages.length === 0}}">
+      <view class="bubble assistant">
+        <text>我是 Shfl 的 AI 探索助手。用一句话告诉我你的心情或场景，我来帮你找下一张专辑。</text>
+      </view>
+    </view>
+
+    <view wx:for="{{messages}}" wx:key="id" id="msg-{{item.id}}">
+      <!-- 用户消息 -->
+      <view class="msg-row user" wx:if="{{item.role === 'user'}}">
+        <view class="bubble user"><text>{{item.content}}</text></view>
+      </view>
+
+      <!-- 助手消息 -->
+      <view class="msg-row assistant" wx:else>
+        <view class="bubble assistant">
+          <text>{{item.content}}</text>
+          <!-- 推荐专辑卡片 -->
+          <view class="album-cards" wx:if="{{item.albums.length > 0}}">
+            <view class="album-card" wx:for="{{item.albums}}" wx:for-item="album" wx:key="id" bindtap="onAlbumTap" data-id="{{album.id}}">
+              <image class="album-cover" src="{{album.coverUrl}}" mode="aspectFill" lazy-load="true"/>
+              <view class="album-meta">
+                <text class="album-title">{{album.title}}</text>
+                <text class="album-artist">{{album.artist}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="msg-row assistant" wx:if="{{isLoading}}">
+      <view class="bubble assistant loading">
+        <text>正在探索你的下一张专辑…</text>
+      </view>
+    </view>
+
+    <view class="list-bottom"></view>
+  </scroll-view>
+
+  <!-- 示例问题（仅在开始时显示） -->
+  <view class="samples" wx:if="{{messages.length === 0 && !isLoading}}">
+    <view class="sample-chip" wx:for="{{samples}}" wx:key="*this" bindtap="onSampleTap" data-question="{{item}}">{{item}}</view>
+  </view>
+
+  <!-- 输入区 -->
+  <view class="input-bar">
+    <input
+      class="chat-input"
+      value="{{inputValue}}"
+      placeholder="描述你的心情或场景…"
+      confirm-type="send"
+      bindinput="onInput"
+      bindconfirm="onSend"
+      disabled="{{isLoading}}"
+    />
+    <button class="send-btn {{isLoading ? 'disabled' : ''}}" bindtap="onSend" disabled="{{isLoading}}">发送</button>
+  </view>
+</view>

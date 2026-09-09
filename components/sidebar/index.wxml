@@ -30,6 +30,10 @@
         <view class="nav-icon">🔍</view>
         <text class="nav-text">Search</text>
       </view>
+      <view class="nav-item" bindtap="onNavTap" data-page="ai-chat">
+        <view class="nav-icon">✦</view>
+        <text class="nav-text">AI Explore</text>
+      </view>
     </view>
 
     <!-- 登录区域 -->

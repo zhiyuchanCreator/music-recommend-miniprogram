@@ -1,0 +1,9 @@
+{
+  "name": "ragChat",
+  "version": "1.0.0",
+  "description": "RAG 音乐探索 Agent：自然语言提问 → 检索候选专辑 → LLM 生成带解释的推荐",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

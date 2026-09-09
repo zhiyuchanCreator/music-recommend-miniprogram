@@ -31,7 +31,8 @@ Component({
         home: '/pages/home/index',
         collections: '/pages/my/index',
         bestof: '/pages/my/index',
-        search: '/pages/search/index'
+        search: '/pages/search/index',
+        'ai-chat': '/pages/ai-chat/index'
       };
 
       const url = urlMap[page];

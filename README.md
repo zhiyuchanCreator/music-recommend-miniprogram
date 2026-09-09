@@ -31,7 +31,7 @@
 - **风格/情绪探索**：多维度标签筛选，帮助用户拓展听歌边界
 - **专辑详情**：封面、曲目、简介、评分、来源平台一键跳转
 - **相似推荐**：基于 Embedding 余弦相似度检索相似专辑，展示共享流派/年代的推荐理由
-- **AI 探索（P2 进行中）**：自然语言提问，RAG 返回带解释的专辑推荐
+- **AI 探索**：`ragChat` RAG Agent——自然语言提问（如「适合深夜写代码的专辑」）→ 意图解析 → 检索候选专辑 → GLM-4-Flash 生成口语化推荐与解释
 - **用户 Memory**：`recordInteraction` 云函数记录浏览/收藏行为，`getUserTaste` 聚合生成品味画像（风格/年代偏好）
 - **离线兜底**：网络异常时自动切换本地缓存或内置数据，避免白屏
 - **全局异常页**：未捕获错误自动跳转兜底页
@@ -172,7 +172,8 @@ flowchart LR
 │   ├── updateGenre                       # 更新流派
 │   ├── getSimilarAlbums                  # Embedding 相似检索（P2）
 │   ├── recordInteraction                 # 用户行为记录（P2）
-│   └── getUserTaste                      # 品味画像聚合（P2）
+│   ├── getUserTaste                      # 品味画像聚合（P2）
+│   └── ragChat                           # RAG 音乐探索 Agent（P2，需配置 ZHIPU_API_KEY）
 ├── data/                                 # 专辑数据
 │   ├── schema.json                       # Album Schema v1
 │   ├── albums.json                       # 100张清洗后数据
@@ -220,7 +221,7 @@ flowchart LR
 |---|---|---|
 | **P0** | 数据基础 | 100 张真实专辑、Schema v1、可扩展数据管线、改造 importData |
 | **P1** | 基础可展示性 | README、架构图、Demo 素材、仓库整理 |
-| **P2** | AI 能力差异化 | ✅ Embedding 相似检索、✅ 用户 Memory（行为记录 + 品味画像）、✅ 推荐解释；⏳ RAG Agent |
+| **P2** | AI 能力差异化 | ✅ Embedding 相似检索、✅ 用户 Memory（行为记录 + 品味画像）、✅ 推荐解释、✅ RAG Agent（ragChat + AI 探索页） |
 | **P3** | 作品包装 | Case Study、Portfolio、项目讲解稿、简历 bullet |
 
 ---
